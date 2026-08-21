@@ -1205,7 +1205,13 @@ em { font-style: italic; color: var(--texto-suave); }
   background: var(--whats-600);
   color: var(--branco);
   box-shadow: var(--sombra-2);
-  transition: background-color .18s ease, transform .18s ease;
+  /* opacity + transform entram na lista por causa da entrada do botão depois
+     do hero (ver seção MOVIMENTO). A curva do transform ultrapassa um pouco
+     antes de assentar — dá o "pop" de um botão que chega, em vez de um
+     elemento que simplesmente aparece. */
+  transition: background-color .18s ease,
+              opacity .2s ease,
+              transform .28s cubic-bezier(.34, 1.4, .64, 1);
 }
 .fab-whatsapp:hover { background: var(--whats-700); color: var(--branco); transform: scale(1.05); }
 
@@ -1292,6 +1298,182 @@ em { font-style: italic; color: var(--texto-suave); }
 @media (min-width: 1200px) {
   .hero-inner > * { max-width: 50rem; }
   .hero-logo { width: 76px; height: 76px; }
+}
+
+/* ============================ MOVIMENTO ============================
+   Entrada do hero + revelação por rolagem. Regras que valem para tudo aqui:
+
+   1. Só `opacity` e `transform`. São as duas propriedades que o navegador
+      compõe na GPU sem recalcular layout — qualquer outra (height, top,
+      margin) causaria reflow a 60fps e travaria no celular.
+
+   2. `animation-fill-mode: backwards`, NUNCA `forwards`/`both`. O `forwards`
+      congela o valor final do keyframe no elemento, e como `to` termina em
+      `transform: none`, ele venceria os `:hover { transform: translateY() }`
+      que já existem nos cards — o hover simplesmente pararia de levantar.
+      O `backwards` só preenche o intervalo ANTES do início (o atraso do
+      stagger); terminada a animação, o elemento volta às regras normais.
+
+   3. O estado escondido só existe sob `html.js-mov`, classe posta por um
+      script inline no <head> que já testa prefers-reduced-motion. Sem JS,
+      com JS desligado ou com movimento reduzido, a classe não entra e a
+      página nasce visível. Nada aqui pode deixar conteúdo invisível de
+      forma permanente — é um site de clínica, não um portfólio.
+
+   4. Distâncias curtas (14px) e durações curtas. O movimento tem de ser
+      percebido como acabamento, não como espetáculo.
+   ==================================================================== */
+
+:root {
+  --mov-dur:   .6s;
+  --mov-ease:  cubic-bezier(.22, .61, .36, 1);  /* desacelera no fim */
+  --mov-dist:  14px;
+  --mov-passo: 90ms;                            /* intervalo do stagger */
+}
+
+@keyframes mov-surgir {
+  from { opacity: 0; transform: translateY(var(--mov-dist)); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ---- Entrada do hero (CSS puro, sem depender de JS) ---- */
+
+@media (prefers-reduced-motion: no-preference) {
+
+  /* A fachada acomoda em vez de aparecer parada. Fecha de 1.12 para o
+     scale(1.06) que a regra base já usa (o 1.06 existe para o blur não
+     deixar as bordas transparentes) — o keyframe termina no mesmo valor,
+     então não há salto quando a animação acaba. */
+  @keyframes mov-fundo {
+    from { transform: scale(1.12); }
+    to   { transform: scale(1.06); }
+  }
+
+  /* O logo entra com um leve crescimento; o resto do hero só sobe. */
+  @keyframes mov-logo {
+    from { opacity: 0; transform: translateY(var(--mov-dist)) scale(.92); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  .hero::before { animation: mov-fundo 1.8s var(--mov-ease) backwards; }
+
+  .hero-inner > * { animation: mov-surgir var(--mov-dur) var(--mov-ease) backwards; }
+
+  /* Cascata na ordem de leitura. O último elemento fecha em ~1,1s:
+     acima disso o visitante percebe espera, não animação. */
+  .hero-inner > .hero-logo { animation-name: mov-logo; animation-delay:  60ms; }
+  .hero-title              { animation-delay: 140ms; }
+  .hero-slogan             { animation-delay: 220ms; }
+  .hero-crm                { animation-delay: 300ms; }
+  .hero-tagline            { animation-delay: 380ms; }
+  .hero-actions            { animation-delay: 460ms; }
+  .hero-note               { animation-delay: 540ms; }
+}
+
+/* ---- Revelação por rolagem ----
+   `[data-revelar]` = revela o próprio elemento.
+   `[data-revelar="lista"]` = o contêiner não anima; cada filho direto anima,
+   em cascata. É assim que os cards entram um a um. */
+
+html.js-mov [data-revelar]:not([data-revelar="lista"]):not(.is-visivel),
+html.js-mov [data-revelar="lista"] > *:not(.is-visivel) {
+  opacity: 0;
+}
+
+/* O atraso vem de `--mov-atraso` em vez de ser escrito direto em
+   `animation-delay`. A diferença importa: custom property HERDA. Assim o
+   numeral dentro do card 3 enxerga o atraso do próprio card (180ms) e
+   consegue se agendar em relação a ele, sem precisar repetir a cascata.
+   A ordem aqui é obrigatória — o atalho `animation` zera o animation-delay,
+   então a linha específica tem de vir depois. */
+html.js-mov .is-visivel {
+  animation: mov-surgir var(--mov-dur) var(--mov-ease) backwards;
+  animation-delay: var(--mov-atraso, 0s);
+}
+
+/* Stagger dos filhos de uma lista. Vai até 8 — nenhuma lista do site passa
+   disso (a maior é o rodapé, com 4 colunas, e os pilares, com 5). */
+html.js-mov [data-revelar="lista"] > *:nth-child(2) { --mov-atraso: calc(var(--mov-passo) * 1); }
+html.js-mov [data-revelar="lista"] > *:nth-child(3) { --mov-atraso: calc(var(--mov-passo) * 2); }
+html.js-mov [data-revelar="lista"] > *:nth-child(4) { --mov-atraso: calc(var(--mov-passo) * 3); }
+html.js-mov [data-revelar="lista"] > *:nth-child(5) { --mov-atraso: calc(var(--mov-passo) * 4); }
+html.js-mov [data-revelar="lista"] > *:nth-child(6) { --mov-atraso: calc(var(--mov-passo) * 5); }
+html.js-mov [data-revelar="lista"] > *:nth-child(7) { --mov-atraso: calc(var(--mov-passo) * 6); }
+html.js-mov [data-revelar="lista"] > *:nth-child(8) { --mov-atraso: calc(var(--mov-passo) * 7); }
+
+/* Stagger manual, para elementos que não são irmãos numa lista — o kicker,
+   o título e o lead de cada seção entram como um bloco encadeado. */
+html.js-mov [data-revelar-i="1"] { --mov-atraso: calc(var(--mov-passo) * 1); }
+html.js-mov [data-revelar-i="2"] { --mov-atraso: calc(var(--mov-passo) * 2); }
+html.js-mov [data-revelar-i="3"] { --mov-atraso: calc(var(--mov-passo) * 3); }
+
+/* ---- Numeral da etapa: entra depois do próprio card ----
+   O círculo com 1/2/3 aparece a 200ms do início da entrada do card, quando o
+   card já está legível. Ler o `--mov-atraso` herdado é o que mantém o numeral
+   preso ao card certo: no card 3 ele sai a 180ms + 200ms.
+   A curva ultrapassa 1 de leve antes de assentar — o suficiente para o numeral
+   parecer que "chega", sem virar um salto. */
+@keyframes mov-numero {
+  from { opacity: 0; transform: scale(.6); }
+  to   { opacity: 1; transform: none; }
+}
+
+html.js-mov .card.is-visivel .card-numero {
+  animation: mov-numero .45s cubic-bezier(.34, 1.3, .64, 1) backwards;
+  animation-delay: calc(var(--mov-atraso, 0s) + 200ms);
+}
+
+/* ---- Régua dourada do hero ----
+   Quem desenha a linha por padrão é o `border-bottom` do .hero: é ele que
+   aparece sem JS e com movimento reduzido, e é por isso que a régua nasce
+   `display: none`. Só havendo movimento a borda é zerada e esta faixa toma o
+   lugar dela, crescendo do centro para as pontas.
+   scaleX porque é transform — composto na GPU. Animar `width` ou
+   `background-size` repintaria a faixa a cada quadro, no fim de uma sequência
+   em que tudo mais já está animando. */
+.hero-regua { display: none; }
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Zerar a largura, e não só a cor: com a borda transparente sobrando,
+     ficariam 3px de marinho embaixo da régua. */
+  .hero { border-bottom-width: 0; }
+
+  .hero-regua {
+    display: block;
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 3px;
+    background: var(--destaque);
+    /* Entra depois do último elemento do hero (540ms + 600ms de duração):
+       fecha a composição em vez de disputar com ela. */
+    animation: mov-regua .9s var(--mov-ease) 700ms backwards;
+  }
+
+  @keyframes mov-regua {
+    from { transform: scaleX(0); }
+    to   { transform: scaleX(1); }
+  }
+}
+
+/* ---- Cabeçalho: sombra ao sair do topo ----
+   Vale mesmo com movimento reduzido: é mudança de estado (a barra passou a
+   flutuar sobre o conteúdo), não movimento. A duração cai para ~0 sozinha,
+   pela regra global lá em cima. */
+.site-header { transition: box-shadow .25s ease, background-color .25s ease; }
+.site-header.is-rolado {
+  background: rgba(255, 255, 255, .97);
+  box-shadow: 0 2px 16px rgba(14, 37, 71, .10);
+}
+
+/* ---- FAB: só entra depois do hero ----
+   No hero o botão grande de agendamento já está na tela; o flutuante em cima
+   dele é ruído. `:not(.is-visivel)` em vez de marcar o estado visível: assim
+   nada define `transform` quando o botão está à mostra, e o `:hover`
+   scale(1.05) que já existe continua funcionando. */
+html.js-mov .fab-whatsapp:not(.is-visivel) {
+  opacity: 0;
+  transform: scale(.7);
+  pointer-events: none;
 }
 
 /* ==================== MOVIMENTO REDUZIDO (fim do arquivo) ====================

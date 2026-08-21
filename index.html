@@ -40,6 +40,19 @@
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 
   <link rel="stylesheet" href="styles.css">
+
+  <!-- Liga as animações de entrada. Tem de ser inline e síncrono no <head>:
+       a classe precisa estar no <html> ANTES da primeira pintura, senão a
+       página aparece inteira e só depois esconde os blocos para revelá-los —
+       um piscar feio.
+       O teste de prefers-reduced-motion fica AQUI, e não só no CSS, porque é
+       esta classe que autoriza todo o estado escondido: quem pediu movimento
+       reduzido nunca chega a ter nada invisível na tela. Sem JS, idem. -->
+  <script>
+    if (!window.matchMedia || !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      document.documentElement.classList.add('js-mov');
+    }
+  </script>
 </head>
 <body>
 
@@ -137,17 +150,22 @@
         </p>
 
       </div>
+
+      <!-- Régua dourada do rodapé do hero. Existe só para poder crescer do
+           centro; sem movimento, quem desenha a linha é o border-bottom do
+           .hero e este span fica display:none. Puramente decorativa. -->
+      <span class="hero-regua" aria-hidden="true"></span>
     </section>
 
     <!-- ============ 2. SOBRE ============ -->
     <section class="section" id="sobre" aria-labelledby="sobre-titulo">
       <div class="wrap">
 
-        <p class="section-kicker">Sobre</p>
-        <h2 class="section-title" id="sobre-titulo">Dr. Cid Cury</h2>
-        <p class="section-crm">Médico &middot; CRM 42.446</p>
+        <p class="section-kicker" data-revelar>Sobre</p>
+        <h2 class="section-title" id="sobre-titulo" data-revelar data-revelar-i="1">Dr. Cid Cury</h2>
+        <p class="section-crm" data-revelar data-revelar-i="2">Médico &middot; CRM 42.446</p>
 
-        <div class="sobre-grid">
+        <div class="sobre-grid" data-revelar="lista">
 
           <div class="sobre-foto">
             <!-- Recorte 4:5 do centro de profile_pictures/profile_02.jpeg.
@@ -208,18 +226,19 @@
     <section class="section section-alt" id="tratamentos" aria-labelledby="tratamentos-titulo">
       <div class="wrap">
 
-        <p class="section-kicker">Tratamentos</p>
-        <h2 class="section-title" id="tratamentos-titulo">Prevenção e controle da obesidade</h2>
+        <p class="section-kicker" data-revelar>Tratamentos</p>
+        <h2 class="section-title" id="tratamentos-titulo" data-revelar data-revelar-i="1">Prevenção e controle da obesidade</h2>
 
         <!-- Descrição factual do serviço, em três etapas.
              PROIBIDO acrescentar aqui: promessa/garantia de resultado, quantidade de
              peso, prazo, nome de fármaco (canetas, hormônios). -->
-        <p class="section-lead">
+        <p class="section-lead" data-revelar data-revelar-i="2">
           O atendimento é organizado em três etapas. A conduta não é padronizada:
           é definida caso a caso, em consulta.
         </p>
 
-        <ul class="cards" role="list">
+        <!-- "lista": os três cards entram um a um, na ordem das etapas. -->
+        <ul class="cards" role="list" data-revelar="lista">
           <li class="card">
             <span class="card-numero" aria-hidden="true">1</span>
             <h3 class="card-title">Avaliação inicial</h3>
@@ -254,7 +273,10 @@
              Checagem CFM: são componentes genéricos do acompanhamento. "Medicação"
              aparece sem nome de fármaco, sem dose e sem alegação terapêutica —
              mantê-lo assim. NÃO citar Ozempic/Mounjaro/Saxenda nem "canetas". -->
-        <div class="pilares-bloco">
+        <!-- O bloco de pilares entra inteiro, como uma peça só. Escalonar as
+             5 linhas por dentro de um card que já é uma unidade visual daria
+             movimento demais para o tom da página. -->
+        <div class="pilares-bloco" data-revelar>
           <h3 class="pilares-titulo">Seu tratamento é baseado em</h3>
 
           <!-- Textos reescritos a partir do rascunho do Bruno, tirando o que
@@ -335,13 +357,13 @@
           </ul>
         </div>
 
-        <p class="disclaimer">
+        <p class="disclaimer" data-revelar>
           <!-- TODO: validar a redação deste aviso com o Dr. Cid Cury. -->
           A conduta é definida individualmente em consulta, a partir da avaliação
           clínica de cada paciente. Os resultados variam de pessoa para pessoa.
         </p>
 
-        <div class="section-actions">
+        <div class="section-actions" data-revelar>
           <a class="btn btn-whatsapp"
              href="https://wa.me/551147446674?text=Ol%C3%A1%2C%20gostaria%20de%20agendar%20uma%20consulta."
              target="_blank" rel="noopener">Agendar pelo WhatsApp</a>
@@ -354,8 +376,8 @@
     <section class="section" id="avaliacoes" aria-labelledby="avaliacoes-titulo">
       <div class="wrap">
 
-        <p class="section-kicker">Avaliações</p>
-        <h2 class="section-title" id="avaliacoes-titulo">O que dizem os pacientes</h2>
+        <p class="section-kicker" data-revelar>Avaliações</p>
+        <h2 class="section-title" id="avaliacoes-titulo" data-revelar data-revelar-i="1">O que dizem os pacientes</h2>
 
         <!-- Citações selecionadas manualmente do perfil do Google (sem scraping).
              São TRECHOS VERBATIM: o corte é marcado com […] e nenhuma palavra foi
@@ -372,7 +394,11 @@
         <!-- Carrossel manual: sem troca automática. O movimento vem do arrasto
              (nativo por overflow + scroll-snap) e das setas. Sem JS, a lista
              continua rolável na horizontal — não quebra. -->
-        <div class="carrossel">
+        <!-- O carrossel entra como bloco único, não em cascata: os cards de
+             depoimento correm na horizontal, e os que estão fora da tela à
+             direita nunca disparariam o observador — a cascata deixaria
+             metade deles invisível até o visitante arrastar. -->
+        <div class="carrossel" data-revelar>
           <ul class="depoimentos" id="depoimentos" role="list"
               tabindex="0" aria-label="Depoimentos de pacientes">
 
@@ -479,11 +505,11 @@
           </div>
         </div>
 
-        <p class="depoimentos-nota">
+        <p class="depoimentos-nota" data-revelar>
           Trechos de avaliações publicadas no perfil da clínica no Google.
         </p>
 
-        <div class="section-actions">
+        <div class="section-actions" data-revelar>
           <a class="btn btn-ghost"
              href="https://www.google.com/maps?cid=6749487699889702082"
              target="_blank" rel="noopener">
@@ -498,9 +524,9 @@
     <section class="section section-alt" id="contato" aria-labelledby="contato-titulo">
       <div class="wrap">
 
-        <p class="section-kicker">Contato</p>
-        <h2 class="section-title" id="contato-titulo">Agendamento</h2>
-        <p class="section-lead section-lead-larga">
+        <p class="section-kicker" data-revelar>Contato</p>
+        <h2 class="section-title" id="contato-titulo" data-revelar data-revelar-i="1">Agendamento</h2>
+        <p class="section-lead section-lead-larga" data-revelar data-revelar-i="2">
           <!-- Redação conferida contra o comportamento real do site: nenhum
                cookie, nenhum localStorage, nenhum formulário. A medição de
                visitas é a Web Analytics da Cloudflare, sem cookies e sem
@@ -509,7 +535,7 @@
           O agendamento é feito pelo WhatsApp ou por telefone. Este site não usa cookies nem formulários; as visitas são medidas de forma anônima.
         </p>
 
-        <div class="contato-grid">
+        <div class="contato-grid" data-revelar="lista">
 
           <!-- WhatsApp — CTA principal -->
           <div class="contato-card contato-card-destaque">
@@ -572,7 +598,7 @@
              Checagem CFM: descreve o formato do atendimento, sem prometer
              resultado e sem sugerir que substitui avaliação presencial quando
              ela for necessária. -->
-        <div class="online-bloco">
+        <div class="online-bloco" data-revelar>
           <span class="online-icone" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" focusable="false"><path d="M15.5 10.5 21 7v10l-5.5-3.5"/><rect x="3" y="6" width="12.5" height="12" rx="2.5"/></svg>
           </span>
@@ -592,7 +618,7 @@
              ladrilhos vêm do OpenStreetMap — ou seja, o IP do visitante só é
              enviado a terceiro DEPOIS do clique. Nada carrega antes disso, e o
              OSM não usa cookies. -->
-        <div class="mapa-bloco">
+        <div class="mapa-bloco" data-revelar>
           <div class="mapa" id="mapa" data-lat="-23.5391255" data-lng="-46.3121153">
             <button class="mapa-consentimento" id="mapa-btn" type="button">
               <span class="mapa-consentimento-icone" aria-hidden="true">
@@ -613,7 +639,7 @@
 
   <!-- ============ 6. RODAPÉ ============ -->
   <footer class="site-footer">
-    <div class="wrap footer-inner">
+    <div class="wrap footer-inner" data-revelar="lista">
 
       <div class="footer-col">
         <div class="footer-marca">
@@ -718,6 +744,80 @@
       // Ano corrente no rodapé.
       var ano = document.getElementById('ano');
       if (ano) ano.textContent = new Date().getFullYear();
+    })();
+
+    // Cabeçalho: ganha sombra assim que sai do topo, para separar a barra do
+    // conteúdo que passa por baixo. Fica FORA do guarda de js-mov: é estado,
+    // não movimento — vale também para quem pediu movimento reduzido.
+    (function () {
+      var cab = document.querySelector('.site-header');
+      if (!cab) return;
+
+      // rAF em vez de reagir a cada evento de scroll: o navegador dispara
+      // dezenas por segundo e só uma pintura por quadro é aproveitada.
+      var agendado = false;
+      function marcar() {
+        agendado = false;
+        cab.classList.toggle('is-rolado', window.scrollY > 8);
+      }
+      window.addEventListener('scroll', function () {
+        if (agendado) return;
+        agendado = true;
+        requestAnimationFrame(marcar);
+      }, { passive: true });
+      marcar();
+    })();
+
+    // Revelação por rolagem. Só roda se o <head> autorizou (js-mov), o que já
+    // exclui prefers-reduced-motion.
+    (function () {
+      var raiz = document.documentElement;
+      if (!raiz.classList.contains('js-mov')) return;
+
+      // Navegador sem IntersectionObserver: desliga o efeito INTEIRO tirando a
+      // classe. Sem isso, o estado escondido do CSS continuaria valendo e a
+      // página ficaria em branco para sempre — falha grave num site de clínica.
+      if (!('IntersectionObserver' in window)) {
+        raiz.classList.remove('js-mov');
+        return;
+      }
+
+      var alvos = [];
+      Array.prototype.forEach.call(
+        document.querySelectorAll('[data-revelar]'),
+        function (el) {
+          if (el.getAttribute('data-revelar') === 'lista') {
+            // O contêiner não anima; quem entra em cascata são os filhos.
+            alvos.push.apply(alvos, el.children);
+          } else {
+            alvos.push(el);
+          }
+        }
+      );
+
+      // threshold 0 + margem inferior negativa: dispara quando o topo do
+      // elemento cruza 88% da altura da tela. Threshold por fração quebraria
+      // em blocos mais altos que a janela (o texto do "Sobre", por exemplo),
+      // que nunca chegariam à fração pedida.
+      var obs = new IntersectionObserver(function (entradas) {
+        entradas.forEach(function (e) {
+          if (!e.isIntersecting) return;
+          e.target.classList.add('is-visivel');
+          obs.unobserve(e.target);   // anima uma vez só, e para de custar
+        });
+      }, { rootMargin: '0px 0px -12% 0px', threshold: 0 });
+
+      alvos.forEach(function (el) { obs.observe(el); });
+
+      // Botão flutuante do WhatsApp: entra quando o hero sai da tela. Dentro
+      // do hero ele seria redundante — o CTA grande já está visível ali.
+      var fab = document.querySelector('.fab-whatsapp');
+      var hero = document.querySelector('.hero');
+      if (fab && hero) {
+        new IntersectionObserver(function (e) {
+          fab.classList.toggle('is-visivel', !e[0].isIntersecting);
+        }, { rootMargin: '-30% 0px 0px 0px', threshold: 0 }).observe(hero);
+      }
     })();
 
     // Carrossel de depoimentos — manual, sem troca automática.
