@@ -55,8 +55,11 @@
   --creme-50:  #FBF8F2;
   --creme-100: #F3EDE1;
 
-  --whats-600: #128C7E;  /* WhatsApp escuro (contraste AA com branco)         */
-  --whats-700: #0F7A6D;  /* WhatsApp hover                                    */
+  /* Verde do WhatsApp, escurecido: o #128C7E anterior dava apenas 4,14:1 com
+     texto branco — abaixo do mínimo AA de 4,5:1. Medido, não estimado.
+     Ao mexer aqui, conferir de novo o contraste do rótulo dos botões. */
+  --whats-600: #0E7366;  /* branco por cima = 5,73:1                          */
+  --whats-700: #0B655A;  /* hover — 6,95:1                                    */
 
   /* Fundo dos cards: branco levemente quente. Tira a dureza do branco puro
      sem virar bege — bege de verdade brigaria com o azul frio das seções. */
@@ -247,6 +250,18 @@ em { font-style: italic; color: var(--texto-suave); }
 .btn:active { transform: translateY(0); }
 
 .btn-lg { padding: 0.9375rem 1.75rem; font-size: var(--t-base); min-height: 52px; }
+/* Rótulo em duas linhas: a ação em cima, o formato embaixo em corpo menor.
+   O ícone do WhatsApp fica fora deste bloco e continua centrado ao lado, então
+   a segunda linha não empurra o ícone para baixo. */
+.btn-txt { display: block; text-align: left; line-height: 1.2; }
+.btn-txt-2 {
+  display: block;
+  margin-top: 1px;
+  font-size: .78em;
+  font-weight: 400;
+  letter-spacing: .01em;
+}
+
 /* min-height 44px também aqui: são alvos de toque reais no mobile */
 .btn-sm { padding: 0.5rem 1rem; font-size: var(--t-xs); min-height: 44px; }
 
@@ -504,25 +519,8 @@ em { font-style: italic; color: var(--texto-suave); }
   padding-block: var(--esp-4);
   border-top: 1px solid rgba(239, 214, 166, .32);
   border-bottom: 1px solid rgba(239, 214, 166, .32);
-  margin-bottom: var(--esp-4);
+  margin-bottom: var(--esp-6);
 }
-
-/* Pílula de formato de atendimento, entre a tagline e o CTA. Dourado porque
-   é a cor de acento do hero; verde do WhatsApp competiria com o botão. */
-.hero-online {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--esp-2);
-  padding: var(--esp-2) var(--esp-4);
-  margin-bottom: var(--esp-5);
-  border: 1px solid rgba(239, 214, 166, .35);
-  border-radius: var(--raio-pill);
-  font-family: var(--fonte-titulo);
-  font-size: var(--t-sm);
-  font-weight: var(--peso-forte);
-  color: var(--dourado-200);
-}
-.hero-online svg { width: 18px; height: 18px; flex: 0 0 auto; }
 
 /* Slogan — segundo elemento mais forte do hero, logo abaixo do nome. */
 .hero-slogan {
