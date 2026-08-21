@@ -1016,7 +1016,10 @@ em { font-style: italic; color: var(--texto-suave); }
 }
 
 .online-texto p {
-  max-width: 62ch;
+  /* 70ch (~640px) para a frase caber numa linha só no desktop: ela pede 573px
+     com a fonte do Windows, e a folga cobre plataformas onde a fonte de sistema
+     desenha mais largo. Ainda é uma medida de leitura razoável se o texto crescer. */
+  max-width: 70ch;
   margin-bottom: var(--esp-4);
   color: var(--azul-800);
   text-wrap: pretty;
