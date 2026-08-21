@@ -32,6 +32,10 @@ testimonial_pictures/
 # Notas internas do projeto
 CLAUDE.md
 .mcp.json
+.claude/
+
+# Capturas e rastros do Playwright, gerados durante a verificação em navegador.
+.playwright-mcp/
 
 # Documentação interna dos assets: registra por que certos materiais foram
 # vetados (Street View, "Especialista em"). Útil para nós, desnecessário —
