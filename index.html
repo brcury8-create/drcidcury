@@ -9,6 +9,24 @@
   <title>Clínica Médica Dr. Cid Cury — Prevenção e controle da obesidade</title>
   <meta name="description" content="Clínica Médica Dr. Cid Cury — CRM 42.446. Prevenção e controle da obesidade. Suzano/SP. Agendamento pelo WhatsApp.">
 
+  <!-- Open Graph — usado pelo WhatsApp, Facebook e Instagram ao gerar a prévia
+       do link. Sem estas tags o WhatsApp cai no <title> + description + ícone,
+       que funciona mas mostra um selo pequeno em vez do cartão largo.
+       og:url e og:image precisam ser absolutos e no MESMO host do canonical
+       (www), senão a prévia aponta para uma URL que redireciona. -->
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://www.drcidcury.com.br/">
+  <meta property="og:site_name" content="Clínica Médica Dr. Cid Cury">
+  <meta property="og:locale" content="pt_BR">
+  <meta property="og:title" content="Clínica Médica Dr. Cid Cury — Prevenção e controle da obesidade">
+  <meta property="og:description" content="Acompanhamento médico para prevenção e controle da obesidade em Suzano/SP. Agendamento pelo WhatsApp, presencial ou online.">
+  <meta property="og:image" content="https://www.drcidcury.com.br/assets/og-image.png">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Clínica Médica Dr. Cid Cury — Médico, CRM 42.446 — Prevenção e controle da obesidade">
+  <meta name="twitter:card" content="summary_large_image">
+
   <meta name="theme-color" content="#14315E">
   <!-- Canônico tem de ser o MESMO destino do redirecionamento: a Cloudflare
        manda o apex para o www com 301, então apontar o canônico para o apex
