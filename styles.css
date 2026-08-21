@@ -34,7 +34,10 @@
        peça impressa ... #001228 marinho quase preto, #C77F10 dourado âmbar
        logotipo ........ #CE2E28 vermelho do coração
      Os valores abaixo ficam entre esses pontos, ajustados para contraste AA. */
-  --azul-900: #071A38;   /* marinho profundo — fundo do hero, rodapé          */
+  --azul-900: #14315E;   /* navy primário da marca — fundo do hero, rodapé    */
+  /* Atenção: com o navy da marca em #14315E, o 900 ficou LEVEMENTE MAIS CLARO
+     que este 800. Os nomes seguem a convenção antiga; o que manda é o uso —
+     900 = fundo escuro (hero/rodapé), 800 = cor de título sobre fundo claro. */
   --azul-800: #0F2A5C;   /* marinho — títulos                                 */
   --azul-700: #1B3FA8;   /* azul institucional (placa) — links, botões        */
   --azul-600: #1B3D85;   /* azul médio — fim do gradiente do hero             */
@@ -452,8 +455,8 @@ em { font-style: italic; color: var(--texto-suave); }
   inset: 0;
   z-index: -1;
   background:
-    radial-gradient(1100px 600px at 50% 40%, rgba(7, 26, 56, .55), transparent 70%),
-    linear-gradient(178deg, rgba(7, 26, 56, .90) 0%, rgba(11, 34, 72, .88) 50%, rgba(15, 42, 92, .90) 100%);
+    radial-gradient(1100px 600px at 50% 40%, rgba(20, 49, 94, .55), transparent 70%),
+    linear-gradient(178deg, rgba(20, 49, 94, .90) 0%, rgba(11, 34, 72, .88) 50%, rgba(15, 42, 92, .90) 100%);
 }
 
 /* O container mantém a largura padrão (senão o `margin-inline:auto` do .wrap
@@ -474,13 +477,13 @@ em { font-style: italic; color: var(--texto-suave); }
   width: 64px;
   height: 64px;
   margin-bottom: var(--esp-4);
-  filter: drop-shadow(0 4px 14px rgba(7, 26, 56, .5));
+  filter: drop-shadow(0 4px 14px rgba(20, 49, 94, .5));
 }
 
 .hero-title {
   margin-bottom: var(--esp-3);
   color: var(--branco);
-  text-shadow: 0 2px 22px rgba(7, 26, 56, .6);
+  text-shadow: 0 2px 22px rgba(20, 49, 94, .6);
   display: flex;
   flex-direction: column;
   gap: .1em;
@@ -610,7 +613,7 @@ em { font-style: italic; color: var(--texto-suave); }
 }
 .sobre-moldura:hover {
   transform: translateY(-4px);
-  box-shadow: 0 16px 40px rgba(7, 26, 56, .20);
+  box-shadow: 0 16px 40px rgba(20, 49, 94, .20);
 }
 
 .sobre-retrato {
@@ -677,7 +680,7 @@ em { font-style: italic; color: var(--texto-suave); }
 }
 .card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 14px 34px rgba(7, 26, 56, .16);
+  box-shadow: 0 14px 34px rgba(20, 49, 94, .16);
   border-color: var(--azul-500);
 }
 .card-title { font-size: var(--t-h3); color: var(--azul-800); margin-bottom: var(--esp-2); }
@@ -810,7 +813,7 @@ em { font-style: italic; color: var(--texto-suave); }
 }
 .depoimento:hover {
   transform: translateY(-4px);
-  box-shadow: 0 14px 34px rgba(7, 26, 56, .16);
+  box-shadow: 0 14px 34px rgba(20, 49, 94, .16);
 }
 .depoimento blockquote { flex: 1; margin: 0 0 var(--esp-3); }
 .depoimento blockquote p { color: var(--texto); }
@@ -937,7 +940,7 @@ em { font-style: italic; color: var(--texto-suave); }
 }
 .contato-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 14px 34px rgba(7, 26, 56, .16);
+  box-shadow: 0 14px 34px rgba(20, 49, 94, .16);
 }
 .contato-card-destaque { border-color: var(--whats-600); border-width: 2px; }
 
@@ -1101,7 +1104,7 @@ em { font-style: italic; color: var(--texto-suave); }
   transform: rotate(-45deg);
   background: var(--vermelho-600);
   border: 3px solid var(--branco);
-  box-shadow: 0 2px 6px rgba(7, 26, 56, .45);
+  box-shadow: 0 2px 6px rgba(20, 49, 94, .45);
 }
 
 /* ============================ RODAPÉ ============================ */
