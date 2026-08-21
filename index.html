@@ -10,7 +10,9 @@
   <meta name="description" content="Clínica Médica Dr. Cid Cury — CRM 42.446. Prevenção e controle da obesidade. Suzano/SP. Agendamento pelo WhatsApp.">
 
   <meta name="theme-color" content="#14315E">
-  <link rel="canonical" href="https://www.drcidcury.com.br/">
+  <!-- Canônico é o domínio curto: mais fácil de ditar por telefone.
+       O www redireciona para cá por Redirect Rule na Cloudflare. -->
+  <link rel="canonical" href="https://drcidcury.com.br/">
   <!-- Favicon aponta para o MESMO arquivo do logo do site, para não haver duas
        versões da marca divergindo. O ?v= fura o cache do navegador, que guarda
        favicon de forma agressiva. -->
@@ -479,7 +481,12 @@
         <p class="section-kicker">Contato</p>
         <h2 class="section-title" id="contato-titulo">Agendamento</h2>
         <p class="section-lead section-lead-larga">
-          O agendamento é feito pelo WhatsApp ou por telefone. Este site não coleta dados pessoais.
+          <!-- Redação conferida contra o comportamento real do site: nenhum
+               cookie, nenhum localStorage, nenhum formulário. A medição de
+               visitas é a Web Analytics da Cloudflare, sem cookies e sem
+               perfil individual — por isso "de forma anônima", e não a
+               afirmação anterior de que nada era coletado. -->
+          O agendamento é feito pelo WhatsApp ou por telefone. Este site não usa cookies nem formulários; as visitas são medidas de forma anônima.
         </p>
 
         <div class="contato-grid">
