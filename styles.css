@@ -253,13 +253,17 @@ em { font-style: italic; color: var(--texto-suave); }
 /* Rótulo em duas linhas: a ação em cima, o formato embaixo em corpo menor.
    O ícone do WhatsApp fica fora deste bloco e continua centrado ao lado, então
    a segunda linha não empurra o ícone para baixo. */
-.btn-txt { display: block; text-align: left; line-height: 1.2; }
+.btn-txt { display: block; text-align: center; line-height: 1.2; }
+/* opacity .88 = 4,83:1 sobre o verde novo, acima do mínimo AA de 4,5:1.
+   Só cabe porque o verde foi escurecido; no #128C7E antigo isso dava 3,57:1.
+   Ao clarear o botão de novo, medir este valor outra vez. */
 .btn-txt-2 {
   display: block;
   margin-top: 1px;
   font-size: .78em;
   font-weight: 400;
   letter-spacing: .01em;
+  opacity: .88;
 }
 
 /* min-height 44px também aqui: são alvos de toque reais no mobile */
