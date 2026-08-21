@@ -1,0 +1,52 @@
+# Playwright / Leaflet / Wrangler tooling — dev only, nunca vai para o deploy
+node_modules/
+package-lock.json
+
+# Pasta de publicação, montada por script. O conteúdo já está versionado na
+# raiz; aqui seria cópia duplicada.
+dist/
+
+# ---------------------------------------------------------------------------
+# MATERIAL DE TRABALHO — NÃO PUBLICAR
+# O GitHub Pages gratuito exige repositório PÚBLICO. Tudo que for versionado
+# fica visível para qualquer pessoa, inclusive o histórico. Estas pastas têm
+# material que não pode virar público:
+#
+#   style_references/  — inclui captura do Google Street View (direito autoral
+#                        do Google) e a peça que diz "Especialista em...", que
+#                        decidimos não usar;
+#   profile_pictures/  — fotos pessoais, incluindo foto com terceiros
+#                        identificáveis e a captura do Street View;
+#   biography/         — material de origem, ainda em conferência.
+#
+# O que o site precisa já está em /assets, tratado e aprovado.
+# ---------------------------------------------------------------------------
+style_references/
+profile_pictures/
+biography/
+
+# Fotos de perfil originais, baixadas do Google. As versões tratadas que o site
+# usa estão em assets/avatares/ — só essas precisam ir para o repositório.
+testimonial_pictures/
+
+# Notas internas do projeto
+CLAUDE.md
+.mcp.json
+
+# Documentação interna dos assets: registra por que certos materiais foram
+# vetados (Street View, "Especialista em"). Útil para nós, desnecessário —
+# e estranho — num repositório público.
+assets/LEIA-ME.md
+
+# Manifesto do npm: só serve para as ferramentas locais
+package.json
+
+# OS
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Faturas, comprovantes e documentos de pagamento. NUNCA versionar:
+# o repositorio e publico.
+payment/
+*.pdf

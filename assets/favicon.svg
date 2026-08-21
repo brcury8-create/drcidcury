@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="Clínica Médica Dr. Cid Cury">
+  <!-- Mesma marca de logo.svg, sem a faixa azul: a faixa some abaixo de 20px. -->
+  <path d="M50 95
+           C 45 90, 4 59.5, 4 32.5
+           C 4 15.5, 17 4, 30.5 4
+           C 40 4, 46.5 9.5, 50 16.5
+           C 53.5 9.5, 60 4, 69.5 4
+           C 83 4, 96 15.5, 96 32.5
+           C 96 59.5, 55 90, 50 95 Z"
+        fill="#CE2E28"/>
+  <g fill="#FFFFFF">
+    <rect x="42" y="24" width="14" height="40" rx="1.8"/>
+    <rect x="29" y="37" width="40" height="14" rx="1.8"/>
+  </g>
+</svg>

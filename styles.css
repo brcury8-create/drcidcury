@@ -1,0 +1,1313 @@
+/* =========================================================================
+   Clínica Médica Dr. Cid Cury — styles.css
+   Mobile-first. CSS puro, sem build, sem dependências externas.
+
+   PALETA E TIPOGRAFIA: inferidas de style_references/ (materiais e fachada
+   da clínica: azul-marinho + azul, dourado, vermelho da cruz, creme).
+   Ajuste os valores abaixo — todo o resto do arquivo os consome.
+   ========================================================================= */
+
+/* Montserrat auto-hospedada (subconjunto "latin", que já cobre todos os
+   acentos do português). Sem CDN: fonte de terceiro entregaria o arquivo e,
+   junto, o IP de cada visitante. 18 KB por peso.
+   font-display: swap — o texto aparece na hora com a fonte do sistema e
+   troca quando a Montserrat chega; nada de título invisível. */
+@font-face {
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url("assets/fonts/montserrat-latin-600-normal.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Montserrat";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("assets/fonts/montserrat-latin-700-normal.woff2") format("woff2");
+}
+
+:root {
+  /* ---- Cores: marca ----
+     Amostradas por pixel dos materiais reais (script em scratchpad):
+       fachada/placa ... #0D1B6D indigo, #2445BB azul vivo
+       peça impressa ... #001228 marinho quase preto, #C77F10 dourado âmbar
+       logotipo ........ #CE2E28 vermelho do coração
+     Os valores abaixo ficam entre esses pontos, ajustados para contraste AA. */
+  --azul-900: #071A38;   /* marinho profundo — fundo do hero, rodapé          */
+  --azul-800: #0F2A5C;   /* marinho — títulos                                 */
+  --azul-700: #1B3FA8;   /* azul institucional (placa) — links, botões        */
+  --azul-600: #1B3D85;   /* azul médio — fim do gradiente do hero             */
+  --azul-500: #3E74D6;   /* azul claro de destaque                            */
+  --azul-100: #E7EEFB;   /* azul muito claro — pílulas, numerais              */
+  --azul-75:  #E6EEF9;   /* azul claríssimo — fundo de seção alternada        */
+  --azul-50:  #F3F7FD;   /* quase branco, com azul — fundo de seção padrão    */
+
+  --dourado-600: #A06A14; /* dourado escuro — texto sobre claro (contraste AA) */
+  --dourado-500: #C7871B; /* dourado âmbar — detalhes, filetes                 */
+  --dourado-200: #EFD6A6; /* dourado claro — texto sobre marinho               */
+
+  --vermelho-600: #CE2E28; /* vermelho do coração — só no logo                */
+
+  /* Creme das peças impressas. Fora de uso no site: as seções passaram a
+     alternar entre azuis claros, e misturar faixa quente com faixa fria
+     deixava o conjunto sujo. Mantido aqui caso volte a ser útil. */
+  --creme-50:  #FBF8F2;
+  --creme-100: #F3EDE1;
+
+  --whats-600: #128C7E;  /* WhatsApp escuro (contraste AA com branco)         */
+  --whats-700: #0F7A6D;  /* WhatsApp hover                                    */
+
+  /* Fundo dos cards: branco levemente quente. Tira a dureza do branco puro
+     sem virar bege — bege de verdade brigaria com o azul frio das seções. */
+  --card-bg: #FDFBF6;
+
+  /* Azul secundário para texto. Escolhido por contraste, não por gosto:
+     6,66:1 sobre --card-bg, praticamente o mesmo do cinza que substitui
+     (6,68:1). Ou seja, muda a cor sem mudar o peso visual. */
+  --texto-azul-suave: #41598F;
+
+  /* ---- Cores: neutros ---- */
+  --tinta:      #16202E; /* texto principal                                   */
+  --tinta-fraca:#4F5B6B; /* texto secundário                                  */
+  --linha:      #DCE3EC; /* bordas                                            */
+  --branco:     #FFFFFF;
+
+  /* ---- Papéis semânticos (é isto que o CSS usa) ----
+     As seções alternam entre dois azuis claríssimos, não branco. Branco puro
+     em faixa larga fica duro demais ao lado do marinho do hero e do rodapé.
+     O cabeçalho continua branco de propósito, para destacar do corpo.
+     Os cards seguem brancos e ganham contraste contra o fundo azulado. */
+  --bg:            var(--azul-50);
+  --bg-alt:        var(--azul-75);
+  --bg-escuro:     var(--azul-900);
+  --texto:         var(--tinta);
+  --texto-suave:   var(--tinta-fraca);
+  --texto-claro:   #DDE6F2;      /* texto sobre fundo escuro                  */
+  --acento:        var(--azul-700);
+  --acento-claro:  var(--azul-500);
+  --destaque:      var(--dourado-500);
+  --borda:         var(--linha);
+
+  /* ---- Tipografia ----
+     Sem Google Fonts por padrão: zero requisição externa = zero exposição
+     de IP do visitante (LGPD limpa) e carregamento instantâneo.
+     Os materiais da clínica usam uma sans geométrica pesada nos títulos
+     (tipo Montserrat / Poppins) e uma sans humanista no corpo.
+     Para trocar: auto-hospedar a fonte em /assets/fonts e mudar as variáveis
+     abaixo. NÃO usar CDN de fontes sem avaliar a LGPD. */
+  --fonte-titulo: "Montserrat", "Segoe UI Variable Display", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+  --fonte-corpo:  "Segoe UI Variable Text", "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif;
+
+  --peso-titulo: 700;
+  --peso-forte:  600;
+
+  /* Escala fluida (mobile-first, cresce até ~1440px) */
+  --t-xs:   0.8125rem;                              /* 13px                   */
+  --t-sm:   0.9375rem;                              /* 15px                   */
+  --t-base: clamp(1rem, 0.97rem + 0.15vw, 1.0625rem);
+  --t-lead: clamp(1.0625rem, 1rem + 0.4vw, 1.25rem);
+  --t-h3:   clamp(1.125rem, 1.05rem + 0.4vw, 1.3125rem);
+  --t-h2:   clamp(1.5rem, 1.25rem + 1.1vw, 2.125rem);
+  --t-h1:   clamp(2.125rem, 1.6rem + 2.4vw, 3.5rem);
+
+  /* ---- Espaçamento ---- */
+  --esp-1: 0.25rem;
+  --esp-2: 0.5rem;
+  --esp-3: 0.75rem;
+  --esp-4: 1rem;
+  --esp-5: 1.5rem;
+  --esp-6: 2rem;
+  --esp-7: 3rem;
+  --esp-8: clamp(3rem, 2rem + 5vw, 5.5rem);   /* espaço vertical de seção     */
+
+  /* ---- Layout ---- */
+  --largura-max: 1160px;
+  --gutter: clamp(1rem, 0.5rem + 2.5vw, 2rem);
+  --raio:    12px;
+  --raio-sm: 8px;
+  --raio-pill: 999px;
+
+  --sombra-1: 0 1px 2px rgba(14, 37, 71, .06), 0 2px 8px rgba(14, 37, 71, .06);
+  --sombra-2: 0 8px 28px rgba(14, 37, 71, .12);
+
+  --header-h: 64px;
+}
+
+/* ============================ RESET ============================ */
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  /* compensa o cabeçalho fixo ao pular por âncora */
+  scroll-padding-top: calc(var(--header-h) + 12px);
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--texto);
+  font-family: var(--fonte-corpo);
+  font-size: var(--t-base);
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+body.nav-aberto { overflow: hidden; }
+
+h1, h2, h3 {
+  font-family: var(--fonte-titulo);
+  font-weight: var(--peso-titulo);
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  margin: 0 0 var(--esp-3);
+  text-wrap: balance;
+}
+
+p { margin: 0 0 var(--esp-4); }
+p:last-child { margin-bottom: 0; }
+
+img, svg { max-width: 100%; height: auto; display: block; }
+
+a { color: var(--acento); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+a:hover { color: var(--azul-500); }
+
+ul { margin: 0; padding: 0; }
+
+address { font-style: normal; }
+
+/* Placeholders de texto ficam visualmente marcados enquanto não há copy final. */
+em { font-style: italic; color: var(--texto-suave); }
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+  /* Os transforms de hover são anulados no fim do arquivo — media query não
+     soma especificidade, então precisa vir depois das regras :hover. */
+}
+
+/* ============================ UTILITÁRIOS ============================ */
+
+.wrap {
+  width: 100%;
+  max-width: var(--largura-max);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* Impede quebra no meio de números (CEP, telefone). */
+.nao-quebra { white-space: nowrap; }
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+.skip-link {
+  position: absolute; left: var(--esp-4); top: -100px;
+  z-index: 200;
+  background: var(--branco); color: var(--acento);
+  padding: var(--esp-3) var(--esp-4);
+  border-radius: var(--raio-sm);
+  box-shadow: var(--sombra-2);
+  font-weight: var(--peso-forte);
+}
+.skip-link:focus { top: var(--esp-3); }
+
+:focus-visible {
+  outline: 3px solid var(--acento-claro);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ============================ BOTÕES ============================ */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--esp-2);
+  padding: 0.75rem 1.25rem;
+  min-height: 44px;                 /* alvo de toque acessível */
+  border: 1px solid transparent;
+  border-radius: var(--raio-pill);
+  font-family: var(--fonte-titulo);
+  font-size: var(--t-sm);
+  font-weight: var(--peso-forte);
+  line-height: 1.2;
+  text-align: center;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color .18s ease, color .18s ease, border-color .18s ease, transform .18s ease;
+}
+.btn:hover { transform: translateY(-1px); }
+.btn:active { transform: translateY(0); }
+
+.btn-lg { padding: 0.9375rem 1.75rem; font-size: var(--t-base); min-height: 52px; }
+/* min-height 44px também aqui: são alvos de toque reais no mobile */
+.btn-sm { padding: 0.5rem 1rem; font-size: var(--t-xs); min-height: 44px; }
+
+.btn-whatsapp { background: var(--whats-600); color: var(--branco); }
+.btn-whatsapp:hover { background: var(--whats-700); color: var(--branco); }
+
+.btn-primario { background: var(--acento); color: var(--branco); }
+.btn-primario:hover { background: var(--azul-800); color: var(--branco); }
+
+.btn-ghost {
+  background: transparent;
+  color: var(--acento);
+  border-color: var(--borda);
+}
+.btn-ghost:hover { background: var(--azul-100); color: var(--azul-800); border-color: var(--acento-claro); }
+
+.btn-icon { display: inline-flex; }
+
+/* ============================ CABEÇALHO ============================ */
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(255, 255, 255, .94);
+  backdrop-filter: saturate(160%) blur(8px);
+  border-bottom: 1px solid var(--borda);
+}
+
+.header-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--esp-4);
+  min-height: var(--header-h);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: var(--esp-3);
+  text-decoration: none;
+  color: var(--azul-800);
+}
+
+/* Marca: coração + cruz + faixa (assets/logo.svg) */
+.brand-mark { width: 36px; height: 36px; flex: 0 0 auto; }
+
+.brand-text { display: flex; flex-direction: column; line-height: 1.1; }
+.brand-kicker {
+  font-size: 0.625rem;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--texto-suave);
+  font-weight: var(--peso-forte);
+}
+.brand-name {
+  font-family: var(--fonte-titulo);
+  font-size: 1.0625rem;
+  font-weight: var(--peso-titulo);
+  color: var(--azul-800);
+}
+
+.nav-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px; height: 44px;
+  padding: 0;
+  background: transparent;
+  border: 1px solid var(--borda);
+  border-radius: var(--raio-sm);
+  cursor: pointer;
+}
+.nav-toggle-bars,
+.nav-toggle-bars::before,
+.nav-toggle-bars::after {
+  display: block;
+  width: 20px; height: 2px;
+  background: var(--azul-800);
+  border-radius: 2px;
+  transition: transform .2s ease, opacity .2s ease;
+}
+.nav-toggle-bars { position: relative; }
+.nav-toggle-bars::before,
+.nav-toggle-bars::after { content: ""; position: absolute; left: 0; }
+.nav-toggle-bars::before { top: -6px; }
+.nav-toggle-bars::after  { top: 6px; }
+
+.nav-toggle[aria-expanded="true"] .nav-toggle-bars { background: transparent; }
+.nav-toggle[aria-expanded="true"] .nav-toggle-bars::before { transform: translateY(6px) rotate(45deg); }
+.nav-toggle[aria-expanded="true"] .nav-toggle-bars::after  { transform: translateY(-6px) rotate(-45deg); }
+
+/* Menu mobile: painel abaixo do cabeçalho.
+   Absoluto em relação a .site-header (que é sticky, logo é bloco contentor).
+   Não usar `fixed` aqui: o backdrop-filter do cabeçalho cria bloco contentor
+   para descendentes fixos e o posicionamento sai errado em parte dos navegadores. */
+.nav {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: var(--branco);
+  border-bottom: 1px solid var(--borda);
+  box-shadow: var(--sombra-2);
+  transform: translateY(-8px);
+  opacity: 0;
+  visibility: hidden;
+  /* visibility só muda no fim do fecho, para o fade de saída ser visível */
+  transition: opacity .18s ease, transform .18s ease, visibility 0s linear .18s;
+}
+.nav.is-open {
+  transform: translateY(0);
+  opacity: 1;
+  visibility: visible;
+  transition: opacity .18s ease, transform .18s ease, visibility 0s;
+}
+
+.nav-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-1);
+  padding: var(--esp-4) var(--gutter) var(--esp-5);
+  max-width: var(--largura-max);
+  margin-inline: auto;
+}
+.nav-list a:not(.btn) {
+  display: block;
+  padding: var(--esp-3) 0;
+  color: var(--azul-800);
+  text-decoration: none;
+  font-weight: var(--peso-forte);
+  border-bottom: 1px solid var(--azul-75);
+}
+.nav-list a:not(.btn):hover { color: var(--acento-claro); }
+.nav-list .btn { margin-top: var(--esp-3); }
+
+/* ============================ HERO ============================ */
+
+/* Foto da fachada como textura de fundo.
+   A origem tem só 680x308, então entra ampliada e sob um scrim escuro —
+   o scrim esconde a falta de nitidez e garante contraste AA no texto.
+   Mobile carrega a versão de 960px; ≥1024px troca pela de 1900px. */
+.hero {
+  position: relative;
+  isolation: isolate;
+  background-color: var(--azul-900);
+  color: var(--texto-claro);
+  padding-block: clamp(3.5rem, 2rem + 7vw, 7rem);
+  /* Altura mínima dá presença sem empurrar o CTA para fora da primeira tela.
+     Desconta o cabeçalho fixo. */
+  min-height: min(78vh, 720px);
+  display: flex;
+  align-items: center;
+  border-bottom: 3px solid var(--destaque);
+  overflow: hidden;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background-image: url("assets/fachada-960.jpg");
+  background-size: cover;
+  /* Ancorado no alto: é onde ficam as placas com o nome da clínica. */
+  background-position: 50% 18%;
+  /* Desfoque de propósito. A placa da fachada também escreve "Dr. Cid Cury" e
+     disputava com o título — desfocada, ela vira textura e o nome aparece uma
+     vez só. De quebra, disfarça a baixa resolução da foto de origem (680×308).
+     O scale(1.06) evita que o blur deixe as bordas transparentes.
+     Quando chegar a foto original em alta, dá para baixar para ~3px. */
+  filter: saturate(.6) contrast(1.05) blur(5px);
+  transform: scale(1.06);
+}
+
+/* Scrim uniforme: com o texto centralizado, não faz sentido abrir de um lado.
+   A fachada continua legível como textura, mas para de disputar com o título —
+   a placa também escreve "Dr. Cid Cury", e sem isso o nome aparecia duas vezes. */
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(1100px 600px at 50% 40%, rgba(7, 26, 56, .55), transparent 70%),
+    linear-gradient(178deg, rgba(7, 26, 56, .90) 0%, rgba(11, 34, 72, .88) 50%, rgba(15, 42, 92, .90) 100%);
+}
+
+/* O container mantém a largura padrão (senão o `margin-inline:auto` do .wrap
+   centraliza o bloco e o hero desalinha das outras seções); quem limita a
+   medida de leitura são os filhos. */
+/* Composição centralizada: o hero é a porta de entrada, e simetria dá peso
+   institucional. Os filhos ficam centrados com medida de leitura limitada. */
+.hero-inner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.hero-inner > * { max-width: 46rem; }
+
+.hero-logo {
+  width: 64px;
+  height: 64px;
+  margin-bottom: var(--esp-4);
+  filter: drop-shadow(0 4px 14px rgba(7, 26, 56, .5));
+}
+
+.hero-title {
+  margin-bottom: var(--esp-3);
+  color: var(--branco);
+  text-shadow: 0 2px 22px rgba(7, 26, 56, .6);
+  display: flex;
+  flex-direction: column;
+  gap: .1em;
+}
+
+/* "Clínica Médica" — linha de cima, menor e espaçada, funciona como
+   sobrelinha do nome sem virar um kicker solto. */
+.hero-title-linha1 {
+  font-size: clamp(.9375rem, .8rem + .5vw, 1.375rem);
+  font-weight: var(--peso-forte);
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: var(--dourado-200);
+}
+
+.hero-title-linha2 {
+  font-size: clamp(2.5rem, 1.5rem + 4.2vw, 5rem);
+  font-weight: var(--peso-titulo);
+  letter-spacing: -.02em;
+  line-height: 1.02;
+}
+
+/* CRM — exigência do CFM, deve ficar legível. */
+.hero-crm {
+  font-family: var(--fonte-titulo);
+  font-size: var(--t-sm);
+  font-weight: var(--peso-forte);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: rgba(221, 230, 242, .85);
+  margin-bottom: var(--esp-5);
+}
+
+/* Tagline factual, entre filetes: fecha o bloco de título e separa dos CTAs. */
+.hero-tagline {
+  font-family: var(--fonte-titulo);
+  font-size: var(--t-lead);
+  font-weight: var(--peso-forte);
+  color: var(--branco);
+  padding-block: var(--esp-4);
+  border-top: 1px solid rgba(239, 214, 166, .32);
+  border-bottom: 1px solid rgba(239, 214, 166, .32);
+  margin-bottom: var(--esp-4);
+}
+
+/* Pílula de formato de atendimento, entre a tagline e o CTA. Dourado porque
+   é a cor de acento do hero; verde do WhatsApp competiria com o botão. */
+.hero-online {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--esp-2);
+  padding: var(--esp-2) var(--esp-4);
+  margin-bottom: var(--esp-5);
+  border: 1px solid rgba(239, 214, 166, .35);
+  border-radius: var(--raio-pill);
+  font-family: var(--fonte-titulo);
+  font-size: var(--t-sm);
+  font-weight: var(--peso-forte);
+  color: var(--dourado-200);
+}
+.hero-online svg { width: 18px; height: 18px; flex: 0 0 auto; }
+
+/* Slogan — segundo elemento mais forte do hero, logo abaixo do nome. */
+.hero-slogan {
+  font-family: var(--fonte-titulo);
+  font-size: clamp(1.125rem, .95rem + .8vw, 1.75rem);
+  font-weight: var(--peso-forte);
+  letter-spacing: .005em;
+  line-height: 1.25;
+  color: var(--dourado-200);
+  margin-bottom: var(--esp-3);
+}
+
+/* justify-content é o que centraliza aqui. align-items só resolvia enquanto a
+   direção era `column`; a partir de 768px vira `row` e passa a valer para o
+   eixo vertical, deixando o botão encostado à esquerda. */
+.hero-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--esp-3);
+  margin-bottom: var(--esp-4);
+  width: 100%;
+}
+
+.hero .btn-ghost { color: var(--branco); border-color: rgba(255, 255, 255, .4); }
+.hero .btn-ghost:hover { background: rgba(255, 255, 255, .12); color: var(--branco); border-color: var(--branco); }
+
+.hero-note { font-size: var(--t-sm); color: rgba(221, 230, 242, .8); }
+
+/* ============================ SEÇÕES ============================ */
+
+.section { padding-block: var(--esp-8); }
+.section-alt { background: var(--bg-alt); border-block: 1px solid #DAE5F5; }
+
+.section-kicker {
+  font-size: var(--t-xs);
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  font-weight: var(--peso-forte);
+  color: var(--dourado-600);
+  margin-bottom: var(--esp-2);
+}
+
+.section-title { font-size: var(--t-h2); color: var(--azul-800); }
+
+.section-crm {
+  font-size: var(--t-sm);
+  font-weight: var(--peso-forte);
+  letter-spacing: .04em;
+  color: var(--texto-suave);
+  margin-bottom: var(--esp-5);
+}
+
+.section-lead {
+  font-size: var(--t-lead);
+  color: var(--texto-suave);
+  max-width: 46rem;
+  margin-bottom: var(--esp-6);
+  text-wrap: pretty;   /* evita palavra órfã na última linha */
+}
+
+/* Para leads que devem caber numa linha só no desktop. */
+.section-lead-larga { max-width: 64rem; }
+
+.section-actions { margin-top: var(--esp-6); display: flex; flex-wrap: wrap; gap: var(--esp-3); }
+
+/* ---- Sobre ---- */
+
+.sobre-grid { display: grid; gap: var(--esp-6); }
+
+/* Retrato do Dr. Cid Cury.
+   A moldura carrega borda/raio/sombra e recorta o zoom; a imagem só escala. */
+.sobre-moldura {
+  width: 100%;
+  max-width: 340px;
+  border-radius: var(--raio);
+  border: 1px solid var(--borda);
+  box-shadow: var(--sombra-2);
+  background: var(--azul-50);
+  overflow: hidden;
+  transition: transform .35s ease, box-shadow .35s ease;
+}
+.sobre-moldura:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(7, 26, 56, .20);
+}
+
+.sobre-retrato {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  object-position: 50% 22%;   /* mantém o rosto no terço superior */
+  transition: transform .45s ease;
+}
+.sobre-moldura:hover .sobre-retrato { transform: scale(1.05); }
+
+.retrato-credito {
+  max-width: 340px;
+  margin-top: var(--esp-2);
+  font-size: var(--t-xs);
+  color: var(--texto-suave);
+}
+
+.foto-placeholder,
+.mapa-placeholder {
+  display: grid;
+  place-items: center;
+  text-align: center;
+  background: repeating-linear-gradient(
+    45deg,
+    var(--azul-50), var(--azul-50) 10px,
+    var(--azul-75) 10px, var(--azul-75) 20px
+  );
+  border: 1px dashed var(--borda);
+  border-radius: var(--raio);
+  color: var(--texto-suave);
+  font-size: var(--t-sm);
+  font-weight: var(--peso-forte);
+}
+.foto-placeholder { aspect-ratio: 4 / 5; max-width: 340px; }
+.mapa-placeholder { aspect-ratio: 16 / 9; margin-block: var(--esp-4); }
+
+.fatos { list-style: none; margin-top: var(--esp-5); display: grid; gap: var(--esp-3); }
+.fatos li {
+  position: relative;
+  padding-left: 1.5rem;
+  color: var(--texto-suave);
+}
+.fatos li::before {
+  content: "";
+  position: absolute;
+  left: 0; top: .6em;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--destaque);
+}
+
+/* ---- Tratamentos ---- */
+
+.cards { list-style: none; display: grid; gap: var(--esp-4); }
+
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--borda);
+  border-radius: var(--raio);
+  padding: var(--esp-5);
+  box-shadow: var(--sombra-1);
+  transition: transform .28s ease, box-shadow .28s ease, border-color .28s ease;
+}
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 34px rgba(7, 26, 56, .16);
+  border-color: var(--azul-500);
+}
+.card-title { font-size: var(--t-h3); color: var(--azul-800); margin-bottom: var(--esp-2); }
+.card p { color: var(--texto-suave); font-size: var(--t-sm); margin: 0; }
+
+/* Numeral da etapa */
+.card-numero {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px; height: 34px;
+  margin-bottom: var(--esp-3);
+  border-radius: 50%;
+  background: var(--azul-100);
+  color: var(--azul-700);
+  font-family: var(--fonte-titulo);
+  font-size: var(--t-sm);
+  font-weight: var(--peso-titulo);
+  line-height: 1;
+}
+
+/* ---- Pilares do tratamento ----
+   Estrutura espelha o bloco "Seu tratamento é baseado em" do material impresso:
+   ícone em círculo escuro + rótulo, separados por filete fino. */
+.pilares-bloco {
+  margin-top: var(--esp-6);
+  background: var(--card-bg);
+  border: 1px solid var(--borda);
+  border-radius: var(--raio);
+  padding: var(--esp-5);
+  box-shadow: var(--sombra-1);
+}
+
+.pilares-titulo {
+  font-size: var(--t-h3);
+  color: var(--azul-800);
+  margin-bottom: var(--esp-4);
+}
+
+.pilares { list-style: none; display: grid; gap: 0; }
+
+.pilar {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--esp-4);
+  padding-block: var(--esp-4);
+  border-bottom: 1px solid var(--borda);
+}
+.pilar:last-child { border-bottom: 0; }
+
+.pilar-corpo { min-width: 0; }
+
+.pilar-titulo {
+  font-size: var(--t-base);
+  font-weight: var(--peso-forte);
+  color: var(--azul-800);
+  margin-bottom: var(--esp-1);
+}
+
+.pilar-desc {
+  margin: 0;
+  font-size: var(--t-sm);
+  color: var(--texto-suave);
+  max-width: 52ch;
+  text-wrap: pretty;
+}
+
+.pilar-icone {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px; height: 42px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: var(--azul-800);
+  color: var(--branco);
+}
+.pilar-icone svg { width: 22px; height: 22px; }
+
+
+/* Fundo branco (não azul): a seção já é azul clara e um azul sobre azul
+   sumiria. O filete lateral é que marca o aviso. */
+.disclaimer {
+  margin-top: var(--esp-5);
+  padding: var(--esp-4);
+  background: var(--card-bg);
+  border: 1px solid var(--borda);
+  border-left: 3px solid var(--acento);
+  border-radius: var(--raio-sm);
+  font-size: var(--t-sm);
+  color: var(--texto-suave);
+}
+
+/* ---- Avaliações ---- */
+
+/* ---- Carrossel de depoimentos ---- */
+.carrossel { position: relative; }
+
+.depoimentos {
+  list-style: none;
+  display: flex;
+  gap: var(--esp-4);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: 0;
+  /* espaço para a sombra dos cards não ser cortada na rolagem */
+  padding: 4px 4px var(--esp-3);
+  margin: -4px -4px 0;
+  scrollbar-width: none;
+}
+.depoimentos::-webkit-scrollbar { display: none; }
+
+.depoimento {
+  flex: 0 0 100%;
+  scroll-snap-align: start;
+}
+
+/* Colunas de mesma altura: a citação estica e o nome fica ancorado embaixo,
+   senão sobra um vão solto nos depoimentos mais curtos. */
+.depoimento {
+  display: flex;
+  flex-direction: column;
+  background: var(--card-bg);
+  border: 1px solid var(--borda);
+  border-left: 3px solid var(--destaque);
+  border-radius: var(--raio);
+  padding: var(--esp-5);
+  box-shadow: var(--sombra-1);
+  transition: transform .28s ease, box-shadow .28s ease;
+}
+.depoimento:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 34px rgba(7, 26, 56, .16);
+}
+.depoimento blockquote { flex: 1; margin: 0 0 var(--esp-3); }
+.depoimento blockquote p { color: var(--texto); }
+/* Sprite de símbolos SVG: não ocupa espaço, só serve de fonte para os <use>. */
+.sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
+
+/* Estrelas — reproduzem a nota que o próprio paciente deu no Google. */
+.depoimento-estrelas {
+  display: flex;
+  gap: 2px;
+  margin: 0 0 var(--esp-3);
+}
+.estrela {
+  width: 16px;
+  height: 16px;
+  fill: #E8A317;   /* âmbar das estrelas do Google, não o dourado da marca */
+}
+
+.depoimento-rodape {
+  display: flex;
+  align-items: center;
+  gap: var(--esp-3);
+  margin-top: var(--esp-4);
+  padding-top: var(--esp-3);
+  border-top: 1px solid var(--borda);
+}
+
+/* Avatar = inicial. Nunca a foto de perfil do avaliador. */
+.depoimento-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px; height: 38px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  font-family: var(--fonte-titulo);
+  font-size: var(--t-base);
+  font-weight: var(--peso-titulo);
+  line-height: 1;
+  color: var(--branco);
+  background: var(--azul-700);
+}
+.depoimento-avatar[data-cor="1"] { background: #1B3FA8; }
+.depoimento-avatar[data-cor="2"] { background: #0E7C6B; }
+.depoimento-avatar[data-cor="3"] { background: #8A5A1B; }
+.depoimento-avatar[data-cor="4"] { background: #6A3D9A; }
+
+.depoimento-autor {
+  font-size: var(--t-sm);
+  font-weight: var(--peso-forte);
+  color: var(--texto);
+  margin: 0;
+}
+
+.depoimentos-nota {
+  margin-top: var(--esp-4);
+  font-size: var(--t-xs);
+  color: var(--texto-suave);
+}
+
+/* Foto de perfil do avaliador (vinda do Google). Quem não tem foto fica com
+   a inicial em .depoimento-avatar — os dois têm o mesmo diâmetro. */
+.depoimento-foto {
+  width: 38px;
+  height: 38px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--azul-100);
+}
+
+.carrossel-controles {
+  display: flex;
+  gap: var(--esp-2);
+  margin-top: var(--esp-4);
+}
+
+.carrossel-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid var(--borda);
+  border-radius: 50%;
+  background: var(--card-bg);
+  color: var(--azul-700);
+  cursor: pointer;
+  transition: background-color .2s ease, border-color .2s ease, color .2s ease;
+}
+.carrossel-btn svg { width: 20px; height: 20px; }
+.carrossel-btn:hover:not([disabled]) {
+  background: var(--azul-700);
+  border-color: var(--azul-700);
+  color: var(--branco);
+}
+.carrossel-btn[disabled] { opacity: .35; cursor: default; }
+
+/* ---- Contato ---- */
+
+/* Cards de mesma altura (align-items padrão: stretch). O vão que sobrava antes
+   era porque o card do endereço tinha o mapa dentro; o mapa saiu para um bloco
+   próprio, então as alturas agora são parecidas e a borda inferior fecha reta. */
+.contato-grid { display: grid; gap: var(--esp-4); }
+
+.contato-card {
+  display: flex;
+  flex-direction: column;
+  background: var(--card-bg);
+  border: 1px solid var(--borda);
+  border-radius: var(--raio);
+  padding: var(--esp-5);
+  box-shadow: var(--sombra-1);
+  transition: transform .28s ease, box-shadow .28s ease;
+}
+
+/* margin-top:auto empurra o botão para o pé do card. Assim "Abrir conversa" e
+   "Como chegar" ficam na mesma linha entre cards de conteúdo diferente, e a
+   sobra de altura vira respiro no meio em vez de um degrau embaixo. */
+.contato-card .btn {
+  margin-top: auto;
+  align-self: flex-start;
+}
+.contato-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 34px rgba(7, 26, 56, .16);
+}
+.contato-card-destaque { border-color: var(--whats-600); border-width: 2px; }
+
+.contato-titulo {
+  font-size: var(--t-xs);
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--texto-suave);
+  font-weight: var(--peso-forte);
+  margin-bottom: var(--esp-2);
+}
+.contato-valor {
+  font-family: var(--fonte-titulo);
+  font-size: var(--t-h3);
+  font-weight: var(--peso-forte);
+  color: var(--azul-800);
+  margin-bottom: var(--esp-3);
+}
+.contato-valor a { color: inherit; text-decoration: none; }
+.contato-valor a:hover { color: var(--acento-claro); text-decoration: underline; }
+
+/* Mesmo azul dos telefones: os quatro cards guardam dados, não prosa, então
+   o corpo deles anda junto em vez de cada um puxar para uma cor. */
+.contato-endereco { color: var(--azul-800); margin-bottom: var(--esp-3); }
+
+/* ---- Horários ---- */
+.horarios { margin: 0; display: grid; gap: var(--esp-1); }
+.horarios dt {
+  font-size: var(--t-sm);
+  font-weight: var(--peso-forte);
+  color: var(--azul-800);
+}
+/* Um passo mais claro que o dia da semana — mesma família de azul, só que
+   secundário, para o dia continuar funcionando como rótulo. */
+.horarios dd {
+  margin: 0 0 var(--esp-3);
+  font-size: var(--t-sm);
+  color: var(--texto-azul-suave);
+}
+.horarios dd:last-child { margin-bottom: 0; }
+
+/* ---- Consulta online ----
+   Mesma linguagem dos cards, com o filete verde do WhatsApp para amarrar ao
+   canal por onde a consulta é combinada. */
+.online-bloco {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--esp-4);
+  margin-top: var(--esp-5);
+  padding: var(--esp-5);
+  background: var(--card-bg);
+  border: 1px solid var(--borda);
+  border-left: 3px solid var(--whats-600);
+  border-radius: var(--raio);
+  box-shadow: var(--sombra-1);
+}
+
+.online-icone {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 46px; height: 46px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: var(--whats-600);
+  color: var(--branco);
+}
+.online-icone svg { width: 24px; height: 24px; }
+
+.online-texto { min-width: 0; }
+
+.online-titulo {
+  font-size: var(--t-h3);
+  color: var(--azul-800);
+  margin-bottom: var(--esp-2);
+}
+
+.online-texto p {
+  max-width: 62ch;
+  margin-bottom: var(--esp-4);
+  color: var(--azul-800);
+  text-wrap: pretty;
+}
+
+/* ---- Mapa sob consentimento ---- */
+.mapa-bloco { margin-top: var(--esp-5); }
+
+.mapa {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  max-height: 420px;
+  border: 1px solid var(--borda);
+  border-radius: var(--raio);
+  overflow: hidden;
+  background: repeating-linear-gradient(
+    45deg,
+    var(--azul-50), var(--azul-50) 10px,
+    var(--azul-75) 10px, var(--azul-75) 20px
+  );
+}
+/* Leaflet precisa de altura explícita depois de inicializado */
+.mapa.is-ativo { background: var(--azul-75); }
+
+/* Botão de consentimento ocupa a caixa inteira */
+.mapa-consentimento {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--esp-2);
+  width: 100%;
+  padding: var(--esp-5);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+  text-align: center;
+  font-family: inherit;
+  transition: background-color .18s ease;
+}
+.mapa-consentimento:hover { background: rgba(27, 63, 168, .06); }
+.mapa-consentimento[disabled] { cursor: progress; }
+
+.mapa-consentimento-icone {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  background: var(--azul-800);
+  color: var(--branco);
+}
+.mapa-consentimento-icone svg { width: 26px; height: 26px; }
+
+.mapa-consentimento-titulo {
+  font-family: var(--fonte-titulo);
+  font-size: var(--t-h3);
+  font-weight: var(--peso-forte);
+  color: var(--azul-800);
+}
+.mapa-consentimento-nota {
+  max-width: 42ch;
+  font-size: var(--t-xs);
+  line-height: 1.5;
+  color: var(--texto-suave);
+}
+.mapa-consentimento.is-carregando .mapa-consentimento-titulo { opacity: .6; }
+.mapa-consentimento.is-erro .mapa-consentimento-nota { color: var(--vermelho-600); }
+
+/* Marcador próprio: dispensa as imagens padrão do Leaflet. */
+.mapa-pin span {
+  display: block;
+  width: 22px; height: 22px;
+  margin: 0 auto;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  background: var(--vermelho-600);
+  border: 3px solid var(--branco);
+  box-shadow: 0 2px 6px rgba(7, 26, 56, .45);
+}
+
+/* ============================ RODAPÉ ============================ */
+
+.site-footer {
+  background: var(--bg-escuro);
+  color: var(--texto-claro);
+  padding-top: var(--esp-7);
+  border-top: 3px solid var(--destaque);
+}
+
+.footer-inner { display: grid; gap: var(--esp-6); padding-bottom: var(--esp-6); }
+
+/* Lockup da marca: logo à esquerda, nome + slogan à direita.
+   align-items:center e o bloco de texto sendo mais alto que o logo fazem a
+   primeira linha do nome nascer na mesma altura dos títulos das outras
+   colunas (ENDEREÇO / CONTATO / REDES SOCIAIS). */
+.footer-marca {
+  display: flex;
+  align-items: center;
+  gap: var(--esp-3);
+}
+
+.footer-logo { width: 44px; height: 44px; flex: 0 0 auto; }
+
+.footer-marca-texto { min-width: 0; }
+
+/* Corpo menor e sem quebra: o nome completo cabe numa linha só ao lado do logo. */
+.footer-brand {
+  font-family: var(--fonte-titulo);
+  font-size: clamp(.9375rem, .88rem + .25vw, 1.0625rem);
+  font-weight: var(--peso-titulo);
+  line-height: 1.2;
+  white-space: nowrap;
+  color: var(--branco);
+  margin-bottom: var(--esp-1);
+}
+
+.footer-slogan {
+  font-size: var(--t-sm);
+  font-weight: var(--peso-forte);
+  line-height: 1.3;
+  color: var(--dourado-200);
+  margin-bottom: 0;
+}
+.footer-heading {
+  font-size: var(--t-xs);
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--dourado-200);
+  font-weight: var(--peso-forte);
+  margin-bottom: var(--esp-3);
+}
+
+.footer-inner address { color: var(--texto-claro); font-size: var(--t-sm); }
+
+.footer-links { list-style: none; display: grid; gap: var(--esp-2); }
+.footer-links li { font-size: var(--t-sm); color: var(--texto-claro); }
+.footer-links a {
+  color: var(--texto-claro);
+  font-size: var(--t-sm);
+  text-decoration: none;
+  display: inline-block;
+  padding-block: 2px;
+}
+.footer-links a:hover { color: var(--branco); text-decoration: underline; }
+
+/* Os dois fixos na mesma linha, separados por barra. */
+.footer-telefones { display: flex; flex-wrap: wrap; align-items: baseline; gap: .35em; }
+.footer-telefones span { color: rgba(221, 230, 242, .45); }
+
+/* Ícones das redes sociais */
+.footer-sociais a { display: inline-flex; align-items: center; gap: var(--esp-2); }
+.icone-social { flex: 0 0 auto; color: var(--dourado-200); transition: color .18s ease; }
+.footer-sociais a:hover .icone-social { color: var(--branco); }
+
+.footer-bottom {
+  border-top: 1px solid rgba(255, 255, 255, .14);
+  padding-block: var(--esp-4) var(--esp-5);
+  font-size: var(--t-xs);
+  color: rgba(221, 230, 242, .75);
+}
+.footer-bottom p { margin-bottom: var(--esp-1); }
+.footer-mini { color: rgba(221, 230, 242, .6); }
+
+/* ============================ FAB WHATSAPP ============================ */
+
+.fab-whatsapp {
+  position: fixed;
+  right: var(--esp-4);
+  bottom: var(--esp-4);
+  z-index: 90;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  background: var(--whats-600);
+  color: var(--branco);
+  box-shadow: var(--sombra-2);
+  transition: background-color .18s ease, transform .18s ease;
+}
+.fab-whatsapp:hover { background: var(--whats-700); color: var(--branco); transform: scale(1.05); }
+
+/* ============================ BREAKPOINTS ============================ */
+
+/* ---- >= 768px (tablet) ---- */
+@media (min-width: 768px) {
+
+  /* align-items:center — texto centralizado verticalmente em relação à foto */
+  .sobre-grid { grid-template-columns: 320px 1fr; align-items: center; gap: var(--esp-7); }
+  /* 3 etapas: 3 colunas já a partir daqui, para não sobrar card órfão */
+  .cards { grid-template-columns: repeat(3, 1fr); }
+
+  .pilares-bloco { padding: var(--esp-6); }
+  /* 2 depoimentos visíveis, descontando o gap */
+  .depoimento { flex-basis: calc((100% - var(--esp-4)) / 2); }
+  .contato-grid { grid-template-columns: repeat(2, 1fr); }
+  .footer-inner { grid-template-columns: repeat(2, 1fr); }
+  /* Sem a linha do CRM, a coluna da marca ficou mais baixa que as outras.
+     Centralizada, o conjunto lê como uma faixa só em vez de um bloco solto
+     no topo. */
+  .footer-col:first-child { align-self: center; }
+
+  .hero-actions { flex-direction: row; flex-wrap: wrap; }
+
+  .footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: var(--esp-4);
+  }
+  .footer-bottom p { margin: 0; }
+}
+
+/* ---- >= 960px (desktop): menu horizontal, sem hambúrguer ---- */
+@media (min-width: 960px) {
+
+  .nav-toggle { display: none; }
+
+  .nav {
+    position: static;
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    transform: none;
+    opacity: 1;
+    visibility: visible;
+  }
+  .nav-list {
+    flex-direction: row;
+    align-items: center;
+    gap: var(--esp-5);
+    padding: 0;
+  }
+  .nav-list a:not(.btn) { border-bottom: 0; padding: var(--esp-2) 0; font-size: var(--t-sm); }
+  .nav-list .btn { margin-top: 0; }
+
+  /* 3 depoimentos visíveis; os outros 3 entram pelas setas ou pelo arrasto. */
+  .depoimento { flex-basis: calc((100% - var(--esp-4) * 2) / 3); }
+
+  /* 5 pilares em 2 colunas. Sem filete aqui: com descrições, as alturas ficam
+     diferentes e os traços não se alinhariam entre as colunas. O espaçamento
+     é que separa. */
+  .pilares {
+    grid-template-columns: repeat(2, 1fr);
+    column-gap: var(--esp-7);
+    row-gap: var(--esp-2);
+  }
+  .pilar { border-bottom: 0; }
+  .contato-grid { grid-template-columns: repeat(4, 1fr); }
+  /* 3ª coluna (Contato) mais larga: os dois fixos precisam caber numa linha. */
+  .footer-inner { grid-template-columns: 1.5fr .9fr 1.35fr .85fr; gap: var(--esp-5); }
+
+  /* Em telas grandes o número do WhatsApp já está visível no topo e no contato. */
+  .fab-whatsapp { display: none; }
+}
+
+/* ---- >= 1024px: fachada em resolução maior ---- */
+@media (min-width: 1024px) {
+  .hero::before { background-image: url("assets/fachada.jpg"); }
+}
+
+/* ---- >= 1200px ---- */
+@media (min-width: 1200px) {
+  .hero-inner > * { max-width: 50rem; }
+  .hero-logo { width: 76px; height: 76px; }
+}
+
+/* ==================== MOVIMENTO REDUZIDO (fim do arquivo) ====================
+   Precisa ficar DEPOIS de todas as regras :hover. Media query não aumenta a
+   especificidade, então, mais acima, as regras :hover posteriores venciam e o
+   elemento continuava saltando para o estado final — movimento zerado em
+   duração, mas ainda movimento. */
+@media (prefers-reduced-motion: reduce) {
+  .card:hover,
+  .depoimento:hover,
+  .contato-card:hover,
+  .sobre-moldura:hover,
+  .btn:hover,
+  .fab-whatsapp:hover,
+  .sobre-moldura:hover .sobre-retrato {
+    transform: none;
+  }
+}
+
+/* ============================ IMPRESSÃO ============================ */
+
+@media print {
+  .site-header, .fab-whatsapp, .section-actions { display: none; }
+  .hero { background: none; color: #000; border-bottom: 1px solid #000; }
+  .hero-title, .hero-crm, .hero-tagline { color: #000; }
+  .site-footer { background: none; color: #000; }
+}
