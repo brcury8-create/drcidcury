@@ -10,9 +10,11 @@
   <meta name="description" content="Clínica Médica Dr. Cid Cury — CRM 42.446. Prevenção e controle da obesidade. Suzano/SP. Agendamento pelo WhatsApp.">
 
   <meta name="theme-color" content="#14315E">
-  <!-- Canônico é o domínio curto: mais fácil de ditar por telefone.
-       O www redireciona para cá por Redirect Rule na Cloudflare. -->
-  <link rel="canonical" href="https://drcidcury.com.br/">
+  <!-- Canônico tem de ser o MESMO destino do redirecionamento: a Cloudflare
+       manda o apex para o www com 301, então apontar o canônico para o apex
+       indicaria uma URL que redireciona na hora — sinal contraditório.
+       Se um dia o redirecionamento inverter, esta linha muda junto. -->
+  <link rel="canonical" href="https://www.drcidcury.com.br/">
   <!-- Favicon aponta para o MESMO arquivo do logo do site, para não haver duas
        versões da marca divergindo. O ?v= fura o cache do navegador, que guarda
        favicon de forma agressiva. -->
