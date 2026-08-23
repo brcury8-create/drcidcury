@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Página não encontrada — Clínica Médica Dr. Cid Cury</title>
+  <!-- Página de erro não deve entrar no índice. -->
+  <meta name="robots" content="noindex, follow">
+  <meta name="theme-color" content="#14315E">
+  <link rel="icon" href="/assets/logo.svg?v=3" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+  <link rel="stylesheet" href="/styles.css">
+  <style>
+    /* A home usa animação de entrada controlada por JS; aqui não há nada a
+       revelar, então a página é estática e centrada na dobra. */
+    .erro-tela {
+      min-height: 100svh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      text-align: center;
+      padding: 2rem 1.25rem;
+    }
+    .erro-logo { width: 72px; height: 72px; }
+    .erro-codigo { font-size: .875rem; letter-spacing: .12em; text-transform: uppercase; opacity: .7; margin: 0; }
+    .erro-titulo { margin: 0; }
+    .erro-texto { max-width: 34rem; margin: 0; }
+  </style>
+</head>
+<body>
+  <main class="erro-tela">
+    <img class="erro-logo" src="/assets/logo.svg" alt="" width="72" height="72">
+    <p class="erro-codigo">Erro 404</p>
+    <h1 class="erro-titulo">Página não encontrada</h1>
+    <p class="erro-texto">
+      O endereço acessado não existe neste site. Volte à página inicial para ver
+      os tratamentos, os horários e como agendar.
+    </p>
+    <p>
+      <a class="btn btn-whatsapp" href="/">Ir para a página inicial</a>
+    </p>
+    <p class="erro-texto">
+      <small>Dr. Cid Cury &middot; Médico &middot; CRM 42.446</small>
+    </p>
+  </main>
+</body>
+</html>

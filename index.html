@@ -41,6 +41,97 @@
 
   <link rel="stylesheet" href="styles.css">
 
+  <!-- Dados estruturados (schema.org). É isto que permite ao Google entender
+       que a página representa uma clínica física em Suzano e ligá-la ao perfil
+       do Google Business, ao Instagram e ao Facebook — sem isso o buscador só
+       vê texto solto.
+       Checagem CFM 2.336/2023: nenhum campo declara especialidade (o Dr. Cid
+       Cury não tem RQE), nenhum promete resultado e não há aggregateRating.
+       Todo valor aqui é cópia exata do que já está visível na página; se o
+       endereço, telefone ou horário mudarem no HTML, mudar aqui junto. -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "MedicalClinic",
+        "@id": "https://www.drcidcury.com.br/#clinica",
+        "name": "Clínica Médica Dr. Cid Cury",
+        "url": "https://www.drcidcury.com.br/",
+        "image": "https://www.drcidcury.com.br/assets/fachada.jpg",
+        "logo": "https://www.drcidcury.com.br/assets/og-image.png",
+        "description": "Acompanhamento médico para prevenção e controle da obesidade em Suzano/SP. Agendamento pelo WhatsApp.",
+        "slogan": "Sua saúde em primeiro lugar!",
+        "telephone": "+55-11-4744-6674",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Rua Portugal Freixo, 222",
+          "addressLocality": "Suzano",
+          "addressRegion": "SP",
+          "postalCode": "08674-170",
+          "addressCountry": "BR"
+        },
+        "geo": {
+          "@type": "GeoCoordinates",
+          "latitude": -23.5391255,
+          "longitude": -46.3121153
+        },
+        "hasMap": "https://www.google.com/maps?cid=6749487699889702082",
+        "areaServed": {
+          "@type": "City",
+          "name": "Suzano"
+        },
+        "openingHoursSpecification": [
+          {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+            "opens": "08:00",
+            "closes": "12:00"
+          },
+          {
+            "@type": "OpeningHoursSpecification",
+            "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+            "opens": "13:00",
+            "closes": "16:00"
+          }
+        ],
+        "sameAs": [
+          "https://www.instagram.com/clinicadrcidcury/",
+          "https://www.facebook.com/clinicamedicacidcury",
+          "https://www.threads.net/@clinicadrcidcury"
+        ],
+        "employee": { "@id": "https://www.drcidcury.com.br/#medico" },
+        "potentialAction": {
+          "@type": "CommunicateAction",
+          "name": "Agendar consulta pelo WhatsApp",
+          "target": "https://wa.me/551147446674"
+        }
+      },
+      {
+        "@type": "Person",
+        "@id": "https://www.drcidcury.com.br/#medico",
+        "name": "Dr. Cid Cury",
+        "jobTitle": "Médico",
+        "image": "https://www.drcidcury.com.br/assets/dr-cid-cury.jpg",
+        "worksFor": { "@id": "https://www.drcidcury.com.br/#clinica" },
+        "identifier": {
+          "@type": "PropertyValue",
+          "name": "CRM",
+          "value": "CRM 42.446"
+        }
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://www.drcidcury.com.br/#site",
+        "url": "https://www.drcidcury.com.br/",
+        "name": "Clínica Médica Dr. Cid Cury",
+        "inLanguage": "pt-BR",
+        "publisher": { "@id": "https://www.drcidcury.com.br/#clinica" }
+      }
+    ]
+  }
+  </script>
+
   <!-- Liga as animações de entrada. Tem de ser inline e síncrono no <head>:
        a classe precisa estar no <html> ANTES da primeira pintura, senão a
        página aparece inteira e só depois esconde os blocos para revelá-los —

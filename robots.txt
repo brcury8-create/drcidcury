@@ -1,0 +1,13 @@
+# Site institucional da Clínica Médica Dr. Cid Cury.
+# Página única, sem área restrita e sem conteúdo que deva ficar fora do índice:
+# tudo é liberado para os buscadores.
+#
+# Nota: a Cloudflare injeta automaticamente o bloco de "content signals"
+# (política de uso por IA) antes deste conteúdo. Sem ESTE arquivo, porém, o
+# /robots.txt caía no fallback do Pages e devolvia o HTML da home inteira —
+# um robots.txt inválido.
+
+User-agent: *
+Allow: /
+
+Sitemap: https://www.drcidcury.com.br/sitemap.xml
