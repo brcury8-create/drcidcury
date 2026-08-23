@@ -1237,6 +1237,27 @@ em { font-style: italic; color: var(--texto-suave); }
 
   .hero-actions { flex-direction: row; flex-wrap: wrap; }
 
+  /* O cabeçalho é sticky — ocupa 64px da primeira tela —, então descontá-lo é o
+     que faz o hero terminar onde a dobra começa. 94svh e não 100svh: a faixa da
+     seção Sobre que sobra à vista é o que avisa que a página continua.
+     `svh` = viewport pequeno (com a barra de endereço aberta), o único que não
+     muda de valor quando a barra some. A linha `vh` acima é o fallback para
+     navegadores sem svh (Safari < 15.4) — não remover, e manter nesta ordem.
+     Abaixo de 768px vale o `min(78vh, 720px)` do .hero: no celular a altura
+     atual já está certa. */
+  .hero {
+    min-height: calc(94vh - var(--header-h));
+    min-height: calc(94svh - var(--header-h));
+    /* Teto de respiro por altura de janela. Sem ele, num notebook de janela
+       baixa (1366x768 → ~700px úteis) o clamp de cima dava 112px em cima e
+       embaixo: padding + conteúdo passavam do `min-height` e o hero terminava
+       fora da tela, justamente o que esta regra veio consertar. Em janela alta
+       o clamp continua menor que 6vh e nada muda — e como o hero é flex com
+       `align-items: center`, encolher o padding não desloca o conteúdo, que
+       segue centrado dentro do `min-height`. */
+    padding-block: min(clamp(3.5rem, 2rem + 7vw, 7rem), 6vh);
+  }
+
   .footer-bottom {
     display: flex;
     justify-content: space-between;
