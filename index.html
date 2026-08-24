@@ -39,12 +39,18 @@
   <link rel="icon" href="assets/logo.svg?v=3" type="image/svg+xml">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 
-  <!-- O ?v= fura o cache do navegador, como já se faz no favicon acima. A
-       Cloudflare serve o CSS com max-age=14400 (4h), então quem já visitou o
-       site continuaria com a folha antiga por até 4 horas — e uma correção
-       visual só apareceria para essa pessoa depois desse prazo.
-       AO MEXER NO styles.css DE FORMA VISÍVEL, INCREMENTAR ESTE NÚMERO. -->
-  <link rel="stylesheet" href="styles.css?v=2">
+  <!-- O ?v= fura o cache do navegador, como já se faz no favicon acima.
+       Medido na produção: a Cloudflare serve CSS **e JS** com
+       `max-age=14400, must-revalidate` (4h). O HTML vem com `max-age=0`, ou
+       seja, sempre revalidado — por isso é o HTML que carrega a versão, e
+       quem manda no que o visitante recebe é o número aqui.
+       Sem isto, quem já visitou o site fica com a folha (ou o script) antigo
+       por até 4 horas, e uma correção visual não chega a essa pessoa.
+
+       ⚠️ AO MEXER EM styles.css, motion.js, tratamentos.js OU hero3d.js DE
+       FORMA VISÍVEL, INCREMENTAR ESTE NÚMERO NOS QUATRO — e no 404.html.
+       Histórico: v2 = marca 3D do hero; v3 = motion da seção Tratamentos. -->
+  <link rel="stylesheet" href="styles.css?v=3">
 
   <!-- Dados estruturados (schema.org). É isto que permite ao Google entender
        que a página representa uma clínica física em Suzano e ligá-la ao perfil
@@ -322,19 +328,26 @@
     <section class="section section-alt" id="tratamentos" aria-labelledby="tratamentos-titulo">
       <div class="wrap">
 
-        <p class="section-kicker" data-revelar>Tratamentos</p>
-        <h2 class="section-title" id="tratamentos-titulo" data-revelar data-revelar-i="1">Prevenção e controle da obesidade</h2>
+        <!-- ATENÇÃO: nesta seção os blocos NÃO usam `data-revelar`.
+             Quem anima a entrada aqui é o assets/tratamentos.js (GSAP +
+             ScrollTrigger), e deixar os dois sistemas no mesmo elemento faria
+             a animação rodar duas vezes.
+             Efeito colateral desejado: o estado escondido passa a ser aplicado
+             por JS, não por CSS. Se o GSAP não carregar, esta seção aparece
+             normalmente, em vez de ficar invisível para sempre. -->
+        <p class="section-kicker">Tratamentos</p>
+        <h2 class="section-title" id="tratamentos-titulo">Prevenção e controle da obesidade</h2>
 
         <!-- Descrição factual do serviço, em três etapas.
              PROIBIDO acrescentar aqui: promessa/garantia de resultado, quantidade de
              peso, prazo, nome de fármaco (canetas, hormônios). -->
-        <p class="section-lead" data-revelar data-revelar-i="2">
+        <p class="section-lead">
           O atendimento é organizado em três etapas. A conduta não é padronizada:
           é definida caso a caso, em consulta.
         </p>
 
-        <!-- "lista": os três cards entram um a um, na ordem das etapas. -->
-        <ul class="cards" role="list" data-revelar="lista">
+        <!-- Os três cards entram um a um, na ordem das etapas (via GSAP). -->
+        <ul class="cards" role="list">
           <li class="card">
             <span class="card-numero" aria-hidden="true">1</span>
             <h3 class="card-title">Avaliação inicial</h3>
@@ -372,7 +385,7 @@
         <!-- O bloco de pilares entra inteiro, como uma peça só. Escalonar as
              5 linhas por dentro de um card que já é uma unidade visual daria
              movimento demais para o tom da página. -->
-        <div class="pilares-bloco" data-revelar>
+        <div class="pilares-bloco">
           <h3 class="pilares-titulo">Seu tratamento é baseado em</h3>
 
           <!-- Textos reescritos a partir do rascunho do Bruno, tirando o que
@@ -453,13 +466,13 @@
           </ul>
         </div>
 
-        <p class="disclaimer" data-revelar>
+        <p class="disclaimer">
           <!-- TODO: validar a redação deste aviso com o Dr. Cid Cury. -->
           A conduta é definida individualmente em consulta, a partir da avaliação
           clínica de cada paciente. Os resultados variam de pessoa para pessoa.
         </p>
 
-        <div class="section-actions" data-revelar>
+        <div class="section-actions">
           <a class="btn btn-whatsapp"
              href="https://wa.me/551147446674?text=Ol%C3%A1%2C%20gostaria%20de%20agendar%20uma%20consulta."
              target="_blank" rel="noopener">Agendar pelo WhatsApp</a>
@@ -1032,7 +1045,13 @@
        (revelação, menu, carrossel, mapa, FAB). -->
   <script src="assets/vendor/gsap/gsap.min.js" defer></script>
   <script src="assets/vendor/gsap/ScrollTrigger.min.js" defer></script>
-  <script src="assets/motion.js" defer></script>
+  <!-- ?v= igual ao do styles.css — ver a nota no <head>. Os arquivos do
+       vendor não levam versão: são de terceiros e não mudam sem troca de
+       versão da própria biblioteca. -->
+  <script src="assets/motion.js?v=3" defer></script>
+  <!-- Depois do motion.js: os dois usam o mesmo ScrollTrigger, e o tratamentos.js
+       conta com o gsap já registrado. `defer` preserva a ordem. -->
+  <script src="assets/tratamentos.js?v=3" defer></script>
 
   <!-- Resolve o specifier nu "three" usado dentro de assets/vendor/three/
        SVGLoader.js — sem isso o import falharia (só funciona para módulos
@@ -1040,7 +1059,7 @@
   <script type="importmap">
   { "imports": { "three": "./assets/vendor/three/three.module.min.js" } }
   </script>
-  <script type="module" src="assets/hero3d.js"></script>
+  <script type="module" src="assets/hero3d.js?v=3"></script>
 
 </body>
 </html>

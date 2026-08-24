@@ -106,18 +106,39 @@
   //    Rotação segue a posição do ponteiro dentro do card; some ao sair.
   //    Amplitude pequena de propósito: é uma clínica médica, não um jogo.
   // ---------------------------------------------------------------------
-  function ligarTilt(el, amplitudeGraus) {
+  // A peça aproxima de leve ao receber o ponteiro e inclina seguindo ele.
+  //
+  // Rotação e escala usam ferramentas DIFERENTES de propósito:
+  //
+  // - A rotação muda a cada quadro (persegue o ponteiro) → `quickTo`, que é
+  //   feito exatamente para isso: reaproveita um tween só, sem criar objeto
+  //   novo a cada movimento do mouse.
+  //
+  // - A escala muda duas vezes por hover (entra / sai) → um `gsap.to()`
+  //   comum. Aqui havia um `quickTo(el, 'scale', ...)` que NUNCA funcionou:
+  //   `scale` é atalho para scaleX/scaleY, e o quickTo não aceita atalho —
+  //   o GSAP recusava com "scale not eligible for reset" a cada hover, sem
+  //   efeito nenhum. O `gsap.to()` aceita o atalho e resolve.
+  //
+  // `overwrite: 'auto'` faz o tween novo matar só o tween de escala anterior
+  // (entra e sai rápido não empilha), e não toca na rotação: o overwrite do
+  // GSAP é por propriedade, e estas não se cruzam.
+  function ligarTilt(el, amplitudeGraus, escalaHover) {
     if (!el) return;
     var MAX = amplitudeGraus || 5;
+    var ESC = escalaHover || 1.015;   // ~5px num card de 355px: acabamento
 
     el.classList.add('tem-tilt');
     gsap.set(el, { transformPerspective: 900, transformOrigin: 'center' });
 
     var rx = gsap.quickTo(el, 'rotationX', { duration: 0.45, ease: 'power3' });
     var ry = gsap.quickTo(el, 'rotationY', { duration: 0.45, ease: 'power3' });
-    var esc = gsap.quickTo(el, 'scale', { duration: 0.35, ease: 'power3' });
 
-    el.addEventListener('pointerenter', function () { esc(1.015); });
+    function escalar(v) {
+      gsap.to(el, { scale: v, duration: 0.35, ease: 'power3', overwrite: 'auto' });
+    }
+
+    el.addEventListener('pointerenter', function () { escalar(ESC); });
     el.addEventListener('pointermove', function (e) {
       var r = el.getBoundingClientRect();
       var px = (e.clientX - r.left) / r.width - 0.5;
@@ -126,7 +147,7 @@
       rx(-py * MAX);
     });
     el.addEventListener('pointerleave', function () {
-      rx(0); ry(0); esc(1);
+      rx(0); ry(0); escalar(1);
     });
   }
 
@@ -136,8 +157,22 @@
     Array.prototype.forEach.call(document.querySelectorAll('.card'), function (el) {
       ligarTilt(el, 5);
     });
+    // Escala menor que a dos cards, e por um motivo concreto: o depoimento
+    // vive dentro do carrossel, que é `overflow-x: auto` e só tem 4px de
+    // padding de folga. Medido a 600px de janela: com 1.015 o card cresce
+    // ~4px para cada lado e encosta na borda do trilho (folga 0) — mais um
+    // fio e passa a ser cortado. Com 1.008 sobra folga em qualquer largura.
+    // O card de Tratamentos não tem esse limite: está numa grade comum.
     Array.prototype.forEach.call(document.querySelectorAll('.depoimento'), function (el) {
-      ligarTilt(el, 4);
+      ligarTilt(el, 4, 1.008);
     });
+
+    // O bloco "Seu tratamento é baseado em" JÁ TEVE tilt aqui e foi tirado.
+    // Mesmo reduzido a ~2° (calibrado para dar o mesmo deslocamento de canto
+    // de um card), inclinar uma superfície de ~1096x605 fica estranho: card é
+    // objeto, um painel dessa largura lê como a própria página entortando.
+    // A vida desse bloco vem do hover linha a linha, em CSS (`.pilar:hover`
+    // no styles.css) — o realce acontece onde o olho está, sem mover a peça
+    // inteira. NÃO reintroduzir tilt aqui.
   }
 })();

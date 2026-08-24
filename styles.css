@@ -781,8 +781,31 @@ em { font-style: italic; color: var(--texto-suave); }
   gap: var(--esp-4);
   padding-block: var(--esp-4);
   border-bottom: 1px solid var(--borda);
+
+  /* O padding lateral dá respiro ao realce do hover, e a margem negativa de
+     mesmo valor devolve o espaço ao layout — o texto continua alinhado com o
+     título do bloco, e nada se desloca quando o realce aparece. */
+  padding-inline: var(--esp-3);
+  margin-inline: calc(var(--esp-3) * -1);
+  border-radius: var(--raio-sm);
+  transition: background-color .25s ease, transform .25s ease;
 }
 .pilar:last-child { border-bottom: 0; }
+
+/* Hover linha a linha. O bloco inteiro também inclina (assets/motion.js),
+   mas uma superfície deste tamanho movendo-se só como uma placa continua
+   parecendo inerte por dentro — é aqui que o olho está, então é aqui que a
+   resposta tem de acontecer. Elevação curta, de acabamento. */
+@media (hover: hover) and (pointer: fine) {
+  .pilar:hover {
+    background: var(--azul-50);
+    transform: translateY(-2px);
+  }
+  .pilar:hover .pilar-icone {
+    background: var(--acento);
+    transform: scale(1.06);
+  }
+}
 
 .pilar-corpo { min-width: 0; }
 
@@ -810,6 +833,7 @@ em { font-style: italic; color: var(--texto-suave); }
   border-radius: 50%;
   background: var(--azul-800);
   color: var(--branco);
+  transition: background-color .25s ease, transform .25s ease;
 }
 .pilar-icone svg { width: 22px; height: 22px; }
 
@@ -1561,6 +1585,8 @@ html.js-mov .fab-whatsapp:not(.is-visivel) {
 @media (prefers-reduced-motion: reduce) {
   .card:hover,
   .depoimento:hover,
+  .pilar:hover,
+  .pilar:hover .pilar-icone,
   .contato-card:hover,
   .sobre-moldura:hover,
   .btn:hover,
