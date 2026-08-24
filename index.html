@@ -39,7 +39,12 @@
   <link rel="icon" href="assets/logo.svg?v=3" type="image/svg+xml">
   <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
 
-  <link rel="stylesheet" href="styles.css">
+  <!-- O ?v= fura o cache do navegador, como já se faz no favicon acima. A
+       Cloudflare serve o CSS com max-age=14400 (4h), então quem já visitou o
+       site continuaria com a folha antiga por até 4 horas — e uma correção
+       visual só apareceria para essa pessoa depois desse prazo.
+       AO MEXER NO styles.css DE FORMA VISÍVEL, INCREMENTAR ESTE NÚMERO. -->
+  <link rel="stylesheet" href="styles.css?v=2">
 
   <!-- Dados estruturados (schema.org). É isto que permite ao Google entender
        que a página representa uma clínica física em Suzano e ligá-la ao perfil
