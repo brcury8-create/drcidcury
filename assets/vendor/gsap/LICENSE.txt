@@ -1,0 +1,10 @@
+﻿GSAP — https://gsap.com
+
+Licenca: Standard "no charge" license
+https://gsap.com/standard-license
+
+Arquivos usados neste site (auto-hospedados, sem CDN):
+  gsap.min.js
+  ScrollTrigger.min.js
+
+Versao: 3.15.0

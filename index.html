@@ -1019,5 +1019,23 @@
     })();
   </script>
 
+  <!-- Motion e cena 3D do hero — GSAP e three.js, self-hosted em
+       assets/vendor (mesmo padrão do Leaflet acima): zero requisição
+       externa, então nada muda na exposição LGPD do site.
+       Tudo aqui é aditivo: se falhar por qualquer motivo, o hero e a
+       página continuam exatamente como o <script> inline acima já garante
+       (revelação, menu, carrossel, mapa, FAB). -->
+  <script src="assets/vendor/gsap/gsap.min.js" defer></script>
+  <script src="assets/vendor/gsap/ScrollTrigger.min.js" defer></script>
+  <script src="assets/motion.js" defer></script>
+
+  <!-- Resolve o specifier nu "three" usado dentro de assets/vendor/three/
+       SVGLoader.js — sem isso o import falharia (só funciona para módulos
+       ES, então não interfere nos scripts clássicos acima). -->
+  <script type="importmap">
+  { "imports": { "three": "./assets/vendor/three/three.module.min.js" } }
+  </script>
+  <script type="module" src="assets/hero3d.js"></script>
+
 </body>
 </html>

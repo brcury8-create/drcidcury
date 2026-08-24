@@ -443,7 +443,10 @@ em { font-style: italic; color: var(--texto-suave); }
      O scale(1.06) evita que o blur deixe as bordas transparentes.
      Quando chegar a foto original em alta, dá para baixar para ~3px. */
   filter: saturate(.6) contrast(1.05) blur(5px);
-  transform: scale(1.06);
+  /* --parallax-y é escrito por assets/motion.js (GSAP) ao rolar; sem JS ou
+     com movimento reduzido, a variável nunca é definida e o fallback 0px
+     vale — a fachada fica exatamente como hoje. */
+  transform: scale(1.06) translateY(var(--parallax-y, 0px));
 }
 
 /* Scrim uniforme: com o texto centralizado, não faz sentido abrir de um lado.
@@ -466,6 +469,7 @@ em { font-style: italic; color: var(--texto-suave); }
    institucional. Os filhos ficam centrados com medida de leitura limitada. */
 .hero-inner {
   position: relative;
+  z-index: 1;               /* fica acima do canvas 3D, que ocupa o z-index 0 */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -478,6 +482,50 @@ em { font-style: italic; color: var(--texto-suave); }
   height: 64px;
   margin-bottom: var(--esp-4);
   filter: drop-shadow(0 4px 14px rgba(20, 49, 94, .5));
+  transition: opacity .3s ease;
+}
+/* Quando o hero3d.js liga a marca extrudada, o <img> plano cede o lugar —
+   mas continua ocupando espaço (visibility, não display:none): sua posição
+   é o que assets/hero3d.js lê para alinhar a marca 3D, inclusive a cada
+   redimensionamento. Removê-lo do layout quebraria esse alinhamento.
+
+   O `animation: none` NÃO é decoração — é o conserto de um bug real.
+   A animação de entrada `mov-logo` anima opacity de 0 a 1 e, enquanto está
+   rodando, uma animação vence uma declaração normal como `opacity: 0`.
+   Resultado: durante os ~660ms da entrada, o logo PLANO reaparecia por cima
+   do canvas (ele vive no .hero-inner, z-index 1, à frente do canvas) e, como
+   a marca 3D é desenhada 1,7x maior que este <img>, via-se um coração menor
+   dentro do coração maior — o "coraçãozinho extra". Zerar a animação devolve
+   o comando para a regra de opacidade e o logo plano some de vez. */
+.hero.is-3d .hero-logo {
+  opacity: 0;
+  visibility: hidden;
+  animation: none;
+}
+
+/* A cena 3D entra com um fade curto: como o logo plano some no instante em
+   que a marca fica pronta, sem isto a troca seria um corte seco. */
+.hero-3d { opacity: 0; transition: opacity .45s ease; }
+.hero.is-3d .hero-3d { opacity: 1; }
+
+/* Canvas da cena 3D do hero (assets/hero3d.js). Criado por JS — se o script
+   não rodar, não existe canvas nenhum na página.
+   Ordem de pilha dentro do .hero (que isola contexto): fachada (-2) < scrim
+   (-1) < canvas 3D (0) < conteúdo do hero (1). */
+.hero-3d {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;     /* não interfere em cliques/toques no hero */
+  display: block;
+}
+/* Cinto e suspensório: mesmo que o guard de JS falhe por algum motivo, quem
+   pediu movimento reduzido nunca vê o canvas nem perde o logo plano. */
+@media (prefers-reduced-motion: reduce) {
+  .hero-3d { display: none !important; }
+  .hero-logo { opacity: 1 !important; }
 }
 
 .hero-title {
@@ -683,6 +731,11 @@ em { font-style: italic; color: var(--texto-suave); }
   box-shadow: 0 14px 34px rgba(20, 49, 94, .16);
   border-color: var(--azul-500);
 }
+/* assets/motion.js assume o `transform` com tilt 3D via ponteiro (só em
+   telas com mouse); tira o transform da transição CSS para o tween do GSAP
+   não brigar com ela — o card recebe esta classe só quando o tilt liga. */
+.card.tem-tilt { transition: box-shadow .28s ease, border-color .28s ease; }
+.card.tem-tilt:hover { transform: none; }
 .card-title { font-size: var(--t-h3); color: var(--azul-800); margin-bottom: var(--esp-2); }
 .card p { color: var(--texto-suave); font-size: var(--t-sm); margin: 0; }
 
@@ -815,6 +868,9 @@ em { font-style: italic; color: var(--texto-suave); }
   transform: translateY(-4px);
   box-shadow: 0 14px 34px rgba(20, 49, 94, .16);
 }
+/* Mesmo esquema do .card.tem-tilt: cede o transform ao tween do GSAP. */
+.depoimento.tem-tilt { transition: box-shadow .28s ease; }
+.depoimento.tem-tilt:hover { transform: none; }
 .depoimento blockquote { flex: 1; margin: 0 0 var(--esp-3); }
 .depoimento blockquote p { color: var(--texto); }
 /* Sprite de símbolos SVG: não ocupa espaço, só serve de fonte para os <use>. */
